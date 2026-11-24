@@ -1,0 +1,76 @@
+{
+  "id": "PED-34A453",
+  "titulo": "ISSUE #184 — Password Reset",
+  "descricao": "Como utilizador registado, quero recuperar a palavra-passe através do meu endereço de e-mail para voltar a aceder à conta.",
+  "criterios": [
+    "O link deve expirar.",
+    "Não deve ser possível descobrir se um e-mail está registado através da resposta pública.",
+    "Todas as tentativas devem ser registadas.",
+    "O fluxo deve funcionar em desktop e mobile."
+  ],
+  "autor": "ana",
+  "fonte_id": "issue:184",
+  "prioridade": "Must",
+  "estado": "Concluído (integrado)",
+  "iteracao": 1,
+  "iteracoes_ciclo": 1,
+  "retomar_em": "",
+  "cenario": {},
+  "historico": [
+    [
+      "2026-11-24T14:21:53",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-24T14:22:12",
+      "Em análise de requisitos",
+      "Aguarda validação de requisitos",
+      "5 requisito(s) aceite(s), 0 excluído(s)"
+    ],
+    [
+      "2026-11-24T14:22:12",
+      "Aguarda validação de requisitos",
+      "Em planeamento",
+      "requisitos validados"
+    ],
+    [
+      "2026-11-24T14:22:12",
+      "Em planeamento",
+      "Em análise de impacto",
+      "plano criado"
+    ],
+    [
+      "2026-11-24T14:22:20",
+      "Em análise de impacto",
+      "Em desenvolvimento",
+      "4 ficheiro(s) relevantes"
+    ],
+    [
+      "2026-11-24T14:22:35",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v1 criada"
+    ],
+    [
+      "2026-11-24T14:22:36",
+      "Em testes",
+      "Em revisão de segurança",
+      "5 teste(s) passaram"
+    ],
+    [
+      "2026-11-24T14:22:36",
+      "Em revisão de segurança",
+      "Aguarda aprovação",
+      "risco alto"
+    ],
+    [
+      "2026-11-24T14:22:36",
+      "Aguarda aprovação",
+      "Concluído (integrado)",
+      "integração aprovada"
+    ]
+  ],
+  "criado_em": "2026-11-24T14:21:53"
+}

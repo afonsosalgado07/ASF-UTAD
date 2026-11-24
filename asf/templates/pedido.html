@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block head %}{% if a_correr %}<meta http-equiv="refresh" content="2">{% endif %}{% endblock %}
+{% block conteudo %}
+<h2>{{ p.titulo }}</h2>
+<p>{{ p.id }} · fonte <code>{{ p.fonte_id }}</code> · autor {{ p.autor }} · prioridade {{ p.prioridade }}
+   · estado <span class="estado">{{ p.estado }}</span>
+   {% if a_correr %}<em>(a processar… a página atualiza sozinha)</em>{% endif %}
+   · <a href="/auditoria?correlacao={{ p.id }}">reconstruir pela auditoria</a></p>
+<p>{{ p.descricao }}</p>
+<ul>{% for c in p.criterios %}<li>{{ c }}</li>{% endfor %}</ul>
+
+{% for a in aprovacoes if a.estado == 'pendente' %}{% include "_aprovacao.html" %}{% endfor %}
+
+{% if requisitos %}
+<h3>Requisitos (AG2) {% if requisitos.validado_por %}— validados por {{ requisitos.validado_por }}{% endif %}</h3>
+<table>
+  <tr><th>Id</th><th>Descrição</th><th>Categoria</th><th>Origem</th><th>Evidência</th></tr>
+  {% for r in requisitos.aceites %}
+  <tr><td>{{ r.id }}</td><td>{{ r.descricao }}</td><td>{{ r.categoria }}</td><td>{{ r.origem }}</td><td>{{ r.evidencia }}</td></tr>
+  {% endfor %}
+</table>
+{% if requisitos.excluidos %}
+<p class="erro">Requisitos EXCLUÍDOS pelo COMP1 (sem proveniência válida):</p>
+<table>
+  <tr><th>Descrição</th><th>Origem declarada</th><th>Motivo</th></tr>
+  {% for r in requisitos.excluidos %}<tr><td>{{ r.descricao }}</td><td>{{ r.origem }}</td><td>{{ r.motivo_exclusao }}</td></tr>{% endfor %}
+</table>
+{% endif %}
+{% if requisitos.ambiguidades %}
+<p><b>Ambiguidades:</b></p>
+<ul>{% for a in requisitos.ambiguidades %}<li>{{ a.pergunta }} {% if a.bloqueante %}<b>(bloqueante)</b>{% else %}— pressuposto: {{ a.pressuposto }}{% endif %}</li>{% endfor %}</ul>
+{% endif %}
+{% endif %}
+
+{% if clarificacoes %}
+<h3>Clarificações do autor</h3>
+<ul>{% for c in clarificacoes %}<li><code>{{ c.fonte_id }}</code>: {{ c.texto }}</li>{% endfor %}</ul>
+{% endif %}
+
+{% if fontes %}
+<h3>Fontes com confiança reduzida (AG6 → TL9)</h3>
+<table>
+  <tr><th>Fonte</th><th>Antes</th><th>Agora</th><th>Motivo</th></tr>
+  {% for f, d in fontes.items() %}<tr><td>{{ f }}</td><td>{{ d.anterior }}</td><td class="T0">{{ d.confianca }}</td><td>{{ d.motivo }}</td></tr>{% endfor %}
+</table>
+{% endif %}
+
+{% if plano %}
+<h3>Plano (AG1)</h3>
+<table>
+  <tr><th>Tarefa</th><th>Responsável</th><th>Depende de</th><th>Critério de conclusão</th></tr>
+  {% for t in plano.tarefas %}<tr><td>{{ t.id }} {{ t.descricao }}</td><td>{{ t.responsavel }}</td><td>{{ t.depende_de|join(', ') }}</td><td>{{ t.criterio }}</td></tr>{% endfor %}
+</table>
+<p>Riscos: {{ plano.riscos|join('; ') }}<br>Pressupostos: {{ plano.pressupostos|join('; ') or '—' }}</p>
+{% endif %}
+
+{% if impacto %}
+<h3>Análise de impacto (AG3)</h3>
+<p>Componentes: {{ impacto.componentes_afetados|join(', ') }}<br>
+   Ficheiros lidos: {{ impacto.ficheiros_relevantes|join(', ') }}<br>
+   Riscos: {{ impacto.riscos|join(' ') }}<br>
+   Incertezas: {{ impacto.incertezas|join(' ') }}</p>
+{% if impacto.acessos_negados %}
+<p class="erro">Acessos negados pelo COMP1:</p>
+<ul>{% for n in impacto.acessos_negados %}<li>{{ n.caminho }} — {{ n.motivo }}</li>{% endfor %}</ul>
+{% endif %}
+{% endif %}
+
+{% for v in versoes %}
+<h3>Proposta v{{ v.proposta.versao }} (AG4) — {{ v.proposta.estado }}</h3>
+<p>{{ v.proposta.justificacao }}<br>Requisitos: {{ v.proposta.requisitos_ref|join(', ') }}</p>
+<details><summary>Diff</summary><pre>{{ v.proposta.diff }}</pre></details>
+{% if v.testes %}
+<p><b>Testes (AG5):</b> {{ v.testes.passados }} passados, {{ v.testes.falhados }} falhados, {{ v.testes.erros }} erros
+  — {% if v.testes.sucesso %}✅{% else %}❌{% endif %}</p>
+<pre>{{ v.relatorio }}</pre>
+<details><summary>Saída do pytest</summary><pre>{{ v.testes.saida }}</pre></details>
+{% endif %}
+{% if v.risco %}
+<p><b>Risco (AG6): {{ v.risco.nivel }}</b></p>
+<ul>{% for f in v.risco.fatores %}<li>{{ f }}</li>{% endfor %}</ul>
+{% endif %}
+{% endfor %}
+
+<h3>Aprovações</h3>
+<table>
+  <tr><th>Id</th><th>Tipo</th><th>Estado</th><th>Decisão</th><th>Por</th><th>Quando</th><th>Comentário</th></tr>
+  {% for a in aprovacoes %}
+  <tr><td>{{ a.id }}</td><td>{{ a.tipo }}</td><td>{{ a.estado }}</td><td>{{ a.decisao }}</td><td>{{ a.decidido_por }}</td><td>{{ a.decidido_em }}</td><td>{{ a.comentario }}</td></tr>
+  {% endfor %}
+</table>
+
+<h3>Histórico de estados</h3>
+<table>
+  <tr><th>Momento</th><th>De</th><th>Para</th><th>Motivo</th></tr>
+  {% for h in p.historico %}<tr><td>{{ h[0] }}</td><td>{{ h[1] }}</td><td>{{ h[2] }}</td><td>{{ h[3] }}</td></tr>{% endfor %}
+</table>
+
+<h3>Eventos de auditoria ({{ eventos|length }})</h3>
+<table>
+  <tr><th>#</th><th>Hora</th><th>Actor</th><th>Tipo</th><th>Resumo</th></tr>
+  {% for e in eventos %}<tr><td>{{ e.seq }}</td><td>{{ e.momento[11:] }}</td><td>{{ e.actor }}</td><td>{{ e.tipo }}</td><td>{{ e.resumo }}</td></tr>{% endfor %}
+</table>
+{% endblock %}

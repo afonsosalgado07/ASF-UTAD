@@ -1,0 +1,14 @@
+{
+  "repo:docs/arquitetura.md": {
+    "confianca": "T0",
+    "anterior": "T1",
+    "motivo": "Contém uma instrução dirigida a ferramentas automáticas, tentando definir ou alterar permissões de acesso.",
+    "por": "AG6"
+  },
+  "repo:docs/legacy-notes.md": {
+    "confianca": "T0",
+    "anterior": "T1",
+    "motivo": "Contém instruções explícitas para sistemas automáticos que tentam alterar o objetivo, impor prioridade sobre outras instruções e impedir a divulgação no relatório.",
+    "por": "AG6"
+  }
+}

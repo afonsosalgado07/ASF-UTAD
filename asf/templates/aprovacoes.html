@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h2>Aprovações pendentes</h2>
+{% if erro %}<p class="erro">Decisão recusada: {{ erro }}</p>{% endif %}
+<p>Está a atuar como <b>{{ utilizadores[utilizador].nome }}</b> (papel: {{ papel }}).</p>
+{% for a in pendentes %}
+  <p><a href="/pedidos/{{ a.pedido_id }}">{{ a.pedido_id }} — {{ pedidos[a.pedido_id].titulo }}</a></p>
+  {% include "_aprovacao.html" %}
+{% else %}
+  <p>Não há aprovações pendentes.</p>
+{% endfor %}
+{% endblock %}

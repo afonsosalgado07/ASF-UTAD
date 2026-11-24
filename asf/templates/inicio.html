@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h2>Novo pedido</h2>
+<div class="caixa">
+  <form method="post" action="/pedidos">
+    <p><b>Issue de exemplo:</b>
+      <button name="exemplo" value="issue_184">Issue #184 — Password Reset</button>
+      <button name="exemplo" value="issue_vaga">Issue #190 — pedido vago (pede clarificação)</button>
+    </p>
+    <p><b>Opções de demonstração</b> (ficam registadas na auditoria):<br>
+      {% if llm == 'simulado' %}
+      <label><input type="checkbox" name="llm_manipulado"> LLM simulado manipulado (obedece a instruções injetadas — cenário adversarial)</label><br>
+      {% else %}
+      <small>Com o LLM real, o cenário adversarial é o próprio <code>docs/legacy-notes.md</code> (instrução injetada), presente em todas as execuções.</small><br>
+      {% endif %}
+      <label><input type="checkbox" name="falha_smtp"> Serviço SMTP indisponível (cenário de falha)</label>
+    </p>
+    <details>
+      <summary>…ou escrever um pedido</summary>
+      <p>Título <input type="text" name="titulo"></p>
+      <p>Descrição <textarea name="descricao" rows="3"></textarea></p>
+      <p>Critérios (um por linha) <textarea name="criterios" rows="4"></textarea></p>
+      <button type="submit">Submeter pedido</button>
+    </details>
+  </form>
+</div>
+
+<h2>Pedidos</h2>
+<table>
+  <tr><th>Id</th><th>Título</th><th>Estado</th><th>Cenário</th><th>Criado</th></tr>
+  {% for p in pedidos %}
+  <tr>
+    <td><a href="/pedidos/{{ p.id }}">{{ p.id }}</a></td>
+    <td>{{ p.titulo }}</td>
+    <td><span class="estado">{{ p.estado }}</span></td>
+    <td>{% for k, v in p.cenario.items() if v %}{{ k }} {% endfor %}</td>
+    <td>{{ p.criado_em }}</td>
+  </tr>
+  {% else %}
+  <tr><td colspan="5">Ainda não há pedidos.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

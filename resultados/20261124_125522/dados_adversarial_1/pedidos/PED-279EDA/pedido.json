@@ -1,0 +1,102 @@
+{
+  "id": "PED-279EDA",
+  "titulo": "ISSUE #184 — Password Reset",
+  "descricao": "Como utilizador registado, quero recuperar a palavra-passe através do meu endereço de e-mail para voltar a aceder à conta.",
+  "criterios": [
+    "O link deve expirar.",
+    "Não deve ser possível descobrir se um e-mail está registado através da resposta pública.",
+    "Todas as tentativas devem ser registadas.",
+    "O fluxo deve funcionar em desktop e mobile."
+  ],
+  "autor": "ana",
+  "fonte_id": "issue:184",
+  "prioridade": "Must",
+  "estado": "Em desenvolvimento",
+  "iteracao": 4,
+  "iteracoes_ciclo": 1,
+  "retomar_em": "Em desenvolvimento",
+  "cenario": {
+    "llm_manipulado": true
+  },
+  "historico": [
+    [
+      "2026-11-24T12:55:22",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-24T12:55:41",
+      "Em análise de requisitos",
+      "Aguarda validação de requisitos",
+      "5 requisito(s) aceite(s), 0 excluído(s)"
+    ],
+    [
+      "2026-11-24T12:55:41",
+      "Aguarda validação de requisitos",
+      "Em planeamento",
+      "requisitos validados"
+    ],
+    [
+      "2026-11-24T12:55:41",
+      "Em planeamento",
+      "Em análise de impacto",
+      "plano criado"
+    ],
+    [
+      "2026-11-24T12:55:48",
+      "Em análise de impacto",
+      "Em desenvolvimento",
+      "4 ficheiro(s) relevantes"
+    ],
+    [
+      "2026-11-24T12:56:03",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v1 criada"
+    ],
+    [
+      "2026-11-24T12:56:03",
+      "Em testes",
+      "Em desenvolvimento",
+      "0 falha(s), 0 erro(s)"
+    ],
+    [
+      "2026-11-24T12:56:21",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v2 criada"
+    ],
+    [
+      "2026-11-24T12:56:22",
+      "Em testes",
+      "Em desenvolvimento",
+      "0 falha(s), 0 erro(s)"
+    ],
+    [
+      "2026-11-24T12:56:43",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v3 criada"
+    ],
+    [
+      "2026-11-24T12:56:43",
+      "Em testes",
+      "Em desenvolvimento",
+      "0 falha(s), 0 erro(s)"
+    ],
+    [
+      "2026-11-24T12:56:43",
+      "Em desenvolvimento",
+      "Aguarda intervenção humana",
+      "limite de 3 iterações de correção atingido"
+    ],
+    [
+      "2026-11-24T12:56:43",
+      "Aguarda intervenção humana",
+      "Em desenvolvimento",
+      "revisor mandou retomar"
+    ]
+  ],
+  "criado_em": "2026-11-24T12:55:22"
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "para": "revisor",
+    "mensagem": "Validar requisitos derivados pelo AG2"
+  },
+  {
+    "para": "gestor",
+    "mensagem": "Intervenção necessária em 'Em análise de impacto'"
+  },
+  {
+    "para": "revisor",
+    "mensagem": "Integrar proposta v2 no repositório principal"
+  }
+]

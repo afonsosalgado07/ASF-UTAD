@@ -1,0 +1,36 @@
+{
+  "versao": 1,
+  "estado": "Substituída",
+  "ficheiros": {
+    "auth/password_reset.py": "\"\"\"Fluxo seguro de recuperação de palavra-passe.\n\nEste módulo implementa o novo fluxo de recuperação sem remover nem alterar o\nendpoint legado existente em auth/reset_password.py.\n\"\"\"\nfrom datetime import datetime, timedelta\nimport secrets\n\nfrom auth import users\nfrom auth.email_service import enviar_email\n\n\nVALIDADE_MINUTOS: int = 30\nREGISTO_TENTATIVAS: list[dict] = []\n\n_MENSAGEM_PUBLICA = (\n    \"Se o e-mail estiver registado, receberá instruções para recuperar a password.\"\n)\n_TOKENS: dict[str, dict] = {}\n\n\ndef _agora(agora: datetime | None = None) -> datetime:\n    return agora if agora is not None else datetime.utcnow()\n\n\ndef _normalizar_email(email: str) -> str:\n    return email.strip().lower()\n\n\ndef _criar_token() -> str:\n    return secrets.token_urlsafe(32)\n\n\ndef pedir_reposicao(email: str, agora: datetime | None = None) -> str:\n    \"\"\"Inicia o processo de recuperação de palavra-passe.\n\n    A resposta pública é sempre igual, quer o e-mail exista quer não exista,\n    evitando enumeração de contas. Todas as tentativas são registadas.\n    \"\"\"\n    momento = _agora(agora)\n    email_normalizado = _normalizar_email(email)\n    existe_utilizador = users.existe(email_normalizado)\n\n    REGISTO_TENTATIVAS.append(\n        {\n            \"momento\": momento,\n            \"email\": email_normalizado,\n            \"utilizador_registado\": existe_utilizador,\n        }\n    )\n\n    if existe_utilizador:\n        token = _criar_token()\n        _TOKENS[token] = {\n            \"email\": email_normalizado,\n            \"criado_em\": momento,\n            \"expira_em\": momento + timedelta(minutes=VALIDADE_MINUTOS),\n            \"usado\": False,\n        }\n\n        link = f\"https://exemplo.pt/repor-password?token={token}\"\n        corpo = (\n            \"Foi pedido um link para recuperar a sua palavra-passe.\\n\\n\"\n            f\"Use este link para definir uma nova palavra-passe: {link}\\n\\n\"\n            f\"Este link expira em {VALIDADE_MINUTOS} minutos.\"\n        )\n        enviar_email(email_normalizado, \"Recuperação de palavra-passe\", corpo)\n\n    return _MENSAGEM_PUBLICA\n\n\ndef confirmar_reposicao(\n    token: str, nova_password: str, agora: datetime | None = None\n) -> bool:\n    \"\"\"Confirma a recuperação e define uma nova palavra-passe.\n\n    Só altera a palavra-passe se o token existir, não tiver sido usado e ainda\n    não tiver expirado.\n    \"\"\"\n    momento = _agora(agora)\n    dados_token = _TOKENS.get(token)\n\n    if dados_token is None:\n        return False\n\n    if dados_token[\"usado\"]:\n        return False\n\n    if momento >= dados_token[\"expira_em\"]:\n        return False\n\n    users.definir_password(dados_token[\"email\"], nova_password)\n    dados_token[\"usado\"] = True\n    dados_token[\"usado_em\"] = momento\n    return True\n"
+  },
+  "diff": "--- a/auth/password_reset.py\n+++ b/auth/password_reset.py\n@@ -0,0 +1,95 @@\n+\"\"\"Fluxo seguro de recuperação de palavra-passe.\n+\n+Este módulo implementa o novo fluxo de recuperação sem remover nem alterar o\n+endpoint legado existente em auth/reset_password.py.\n+\"\"\"\n+from datetime import datetime, timedelta\n+import secrets\n+\n+from auth import users\n+from auth.email_service import enviar_email\n+\n+\n+VALIDADE_MINUTOS: int = 30\n+REGISTO_TENTATIVAS: list[dict] = []\n+\n+_MENSAGEM_PUBLICA = (\n+    \"Se o e-mail estiver registado, receberá instruções para recuperar a password.\"\n+)\n+_TOKENS: dict[str, dict] = {}\n+\n+\n+def _agora(agora: datetime | None = None) -> datetime:\n+    return agora if agora is not None else datetime.utcnow()\n+\n+\n+def _normalizar_email(email: str) -> str:\n+    return email.strip().lower()\n+\n+\n+def _criar_token() -> str:\n+    return secrets.token_urlsafe(32)\n+\n+\n+def pedir_reposicao(email: str, agora: datetime | None = None) -> str:\n+    \"\"\"Inicia o processo de recuperação de palavra-passe.\n+\n+    A resposta pública é sempre igual, quer o e-mail exista quer não exista,\n+    evitando enumeração de contas. Todas as tentativas são registadas.\n+    \"\"\"\n+    momento = _agora(agora)\n+    email_normalizado = _normalizar_email(email)\n+    existe_utilizador = users.existe(email_normalizado)\n+\n+    REGISTO_TENTATIVAS.append(\n+        {\n+            \"momento\": momento,\n+            \"email\": email_normalizado,\n+            \"utilizador_registado\": existe_utilizador,\n+        }\n+    )\n+\n+    if existe_utilizador:\n+        token = _criar_token()\n+        _TOKENS[token] = {\n+            \"email\": email_normalizado,\n+            \"criado_em\": momento,\n+            \"expira_em\": momento + timedelta(minutes=VALIDADE_MINUTOS),\n+            \"usado\": False,\n+        }\n+\n+        link = f\"https://exemplo.pt/repor-password?token={token}\"\n+        corpo = (\n+            \"Foi pedido um link para recuperar a sua palavra-passe.\\n\\n\"\n+            f\"Use este link para definir uma nova palavra-passe: {link}\\n\\n\"\n+            f\"Este link expira em {VALIDADE_MINUTOS} minutos.\"\n+        )\n+        enviar_email(email_normalizado, \"Recuperação de palavra-passe\", corpo)\n+\n+    return _MENSAGEM_PUBLICA\n+\n+\n+def confirmar_reposicao(\n+    token: str, nova_password: str, agora: datetime | None = None\n+) -> bool:\n+    \"\"\"Confirma a recuperação e define uma nova palavra-passe.\n+\n+    Só altera a palavra-passe se o token existir, não tiver sido usado e ainda\n+    não tiver expirado.\n+    \"\"\"\n+    momento = _agora(agora)\n+    dados_token = _TOKENS.get(token)\n+\n+    if dados_token is None:\n+        return False\n+\n+    if dados_token[\"usado\"]:\n+        return False\n+\n+    if momento >= dados_token[\"expira_em\"]:\n+        return False\n+\n+    users.definir_password(dados_token[\"email\"], nova_password)\n+    dados_token[\"usado\"] = True\n+    dados_token[\"usado_em\"] = momento\n+    return True",
+  "justificacao": "Implementado o novo módulo auth/password_reset.py conforme a interface aprovada, sem alterar nem remover o endpoint legado. O fluxo inicia recuperação por e-mail para utilizadores registados, devolve sempre a mesma mensagem pública para impedir enumeração, regista todas as tentativas de pedido com momento, emite tokens com expiração e só permite alterar a palavra-passe quando o token é válido, não usado e não expirado. O fluxo é independente do tipo de dispositivo por estar implementado como lógica backend reutilizável por desktop e mobile.",
+  "requisitos_ref": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5"
+  ],
+  "historico": [
+    [
+      "2026-11-24T14:23:24",
+      "Rascunho",
+      "Em testes",
+      ""
+    ],
+    [
+      "2026-11-24T14:23:25",
+      "Em testes",
+      "Testes falhados",
+      ""
+    ],
+    [
+      "2026-11-24T14:23:25",
+      "Testes falhados",
+      "Substituída",
+      "nova iteração"
+    ]
+  ]
+}

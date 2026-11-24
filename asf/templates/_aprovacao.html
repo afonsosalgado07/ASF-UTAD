@@ -1,0 +1,16 @@
+{# Formulário de decisão de um pedido de aprovação (usado em várias páginas) #}
+<div class="caixa pendente">
+  <b>{{ a.id }} — {{ a.tipo }}</b> (nível {{ a.nivel }}) · pedido por {{ a.solicitado_por }} em {{ a.criado_em }}<br>
+  {{ a.resumo }}
+  <pre>{{ a.detalhe }}</pre>
+  {% if papel == a.papel_decisor %}
+  <form method="post" action="/aprovacoes/{{ a.id }}">
+    <textarea name="comentario" rows="3" placeholder="{% if a.tipo == 'CLARIFICACAO' %}Resposta ao pedido de clarificação{% else %}Comentário (obrigatório para pedir revisão/correções){% endif %}"></textarea>
+    {% for op in a.opcoes %}
+    <button type="submit" name="decisao" value="{{ op }}">{{ op }}</button>
+    {% endfor %}
+  </form>
+  {% else %}
+  <p class="aviso">Só um utilizador com papel <b>{{ a.papel_decisor }}</b> pode decidir (troque de utilizador no topo).</p>
+  {% endif %}
+</div>

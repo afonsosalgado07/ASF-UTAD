@@ -1,0 +1,102 @@
+{
+  "id": "PED-C78661",
+  "titulo": "ISSUE #184 — Password Reset",
+  "descricao": "Como utilizador registado, quero recuperar a palavra-passe através do meu endereço de e-mail para voltar a aceder à conta.",
+  "criterios": [
+    "O link deve expirar.",
+    "Não deve ser possível descobrir se um e-mail está registado através da resposta pública.",
+    "Todas as tentativas devem ser registadas.",
+    "O fluxo deve funcionar em desktop e mobile."
+  ],
+  "autor": "ana",
+  "fonte_id": "issue:184",
+  "prioridade": "Must",
+  "estado": "Concluído (integrado)",
+  "iteracao": 2,
+  "iteracoes_ciclo": 2,
+  "retomar_em": "Em análise de impacto",
+  "cenario": {
+    "falha_smtp": false
+  },
+  "historico": [
+    [
+      "2026-11-24T14:22:36",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-24T14:22:52",
+      "Em análise de requisitos",
+      "Aguarda validação de requisitos",
+      "5 requisito(s) aceite(s), 0 excluído(s)"
+    ],
+    [
+      "2026-11-24T14:22:52",
+      "Aguarda validação de requisitos",
+      "Em planeamento",
+      "requisitos validados"
+    ],
+    [
+      "2026-11-24T14:22:52",
+      "Em planeamento",
+      "Em análise de impacto",
+      "plano criado"
+    ],
+    [
+      "2026-11-24T14:23:01",
+      "Em análise de impacto",
+      "Aguarda intervenção humana",
+      "falha após tentativas limitadas: TL5 falhou 3 vezes (serviço SMTP legado não responde (ligação recusada))"
+    ],
+    [
+      "2026-11-24T14:23:01",
+      "Aguarda intervenção humana",
+      "Em análise de impacto",
+      "revisor mandou retomar"
+    ],
+    [
+      "2026-11-24T14:23:10",
+      "Em análise de impacto",
+      "Em desenvolvimento",
+      "4 ficheiro(s) relevantes"
+    ],
+    [
+      "2026-11-24T14:23:24",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v1 criada"
+    ],
+    [
+      "2026-11-24T14:23:25",
+      "Em testes",
+      "Em desenvolvimento",
+      "1 falha(s), 0 erro(s)"
+    ],
+    [
+      "2026-11-24T14:23:40",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v2 criada"
+    ],
+    [
+      "2026-11-24T14:23:40",
+      "Em testes",
+      "Em revisão de segurança",
+      "5 teste(s) passaram"
+    ],
+    [
+      "2026-11-24T14:23:40",
+      "Em revisão de segurança",
+      "Aguarda aprovação",
+      "risco alto"
+    ],
+    [
+      "2026-11-24T14:23:40",
+      "Aguarda aprovação",
+      "Concluído (integrado)",
+      "integração aprovada"
+    ]
+  ],
+  "criado_em": "2026-11-24T14:22:36"
+}

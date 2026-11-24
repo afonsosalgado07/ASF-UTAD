@@ -1,0 +1,32 @@
+[
+  {
+    "id": "APR-273BDC",
+    "pedido_id": "PED-34A453",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "5 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-24T14:22:12",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-24T14:22:12",
+    "comentario": "decisão automática (CLI de cenários — revisor simulado)"
+  },
+  {
+    "id": "APR-72345C",
+    "pedido_id": "PED-34A453",
+    "tipo": "INTEGRAR_PROPOSTA",
+    "nivel": 2,
+    "resumo": "Integrar proposta v1 no repositório principal",
+    "detalhe": "Risco alto: Altera o módulo de autenticação (sensível para a segurança). 1 requisito(s) sem teste automático — verificação manual necessária. Fontes com confiança reduzida durante a análise: repo:docs/legacy-notes.md",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-24T14:22:36",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-24T14:22:36",
+    "comentario": "decisão automática (CLI de cenários — revisor simulado)"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "fonte_id": "issue:184",
+  "titulo": "ISSUE #184 — Password Reset",
+  "descricao": "Como utilizador registado, quero recuperar a palavra-passe através do meu endereço de e-mail para voltar a aceder à conta.",
+  "criterios": [
+    "O link deve expirar.",
+    "Não deve ser possível descobrir se um e-mail está registado através da resposta pública.",
+    "Todas as tentativas devem ser registadas.",
+    "O fluxo deve funcionar em desktop e mobile."
+  ],
+  "prioridade": "Must"
+}

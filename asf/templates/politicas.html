@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h2>Matriz de permissões (COMP1)</h2>
+<p>Lida de <code>politicas.json</code>. O que não está autorizado está bloqueado por defeito.</p>
+<table>
+  <tr><th>Ferramenta</th><th>Tipo</th><th>Nível</th>{% for a in agentes %}<th>{{ a }}</th>{% endfor %}</tr>
+  {% for tid, t in ferramentas.items() %}
+  <tr><td>{{ tid }} — {{ t.nome }}</td><td>{{ t.tipo }}</td><td>{{ t.nivel }}</td>
+    {% for a in agentes %}<td>{% if tid in matriz[a] %}✔{% endif %}</td>{% endfor %}</tr>
+  {% endfor %}
+</table>
+<h2>Classificação de fontes (pela origem)</h2>
+<table>
+  <tr><th>Padrão</th><th>Confiança</th><th>Sensível</th></tr>
+  {% for f in fontes %}<tr><td>{{ f.padrao }}</td><td>{{ f.confianca }}</td><td>{{ 'sim' if f.sensivel else '' }}</td></tr>{% endfor %}
+</table>
+{% endblock %}

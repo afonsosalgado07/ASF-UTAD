@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<title>Agentic Software Factory</title>
+{% block head %}{% endblock %}
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 1100px; margin: 0 auto; padding: 0 16px 40px; color: #222; }
+  header { display: flex; gap: 16px; align-items: center; border-bottom: 1px solid #ccc; padding: 10px 0; margin-bottom: 16px; flex-wrap: wrap; }
+  header nav a { margin-right: 12px; }
+  header form { margin-left: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 16px; }
+  th, td { border: 1px solid #ddd; padding: 5px 8px; text-align: left; vertical-align: top; font-size: 14px; }
+  th { background: #f3f3f3; }
+  pre { background: #f6f6f6; padding: 8px; overflow-x: auto; font-size: 12px; max-height: 400px; }
+  .caixa { border: 1px solid #ccc; padding: 10px 14px; margin: 12px 0; border-radius: 4px; }
+  .pendente { border-color: #c80; background: #fff8e6; }
+  .erro { color: #b00; font-weight: bold; }
+  .estado { font-weight: bold; padding: 2px 8px; border-radius: 3px; background: #e8eefc; }
+  .T0 { color: #b00; font-weight: bold; }
+  .aviso { color: #a60; }
+  textarea, input[type=text] { width: 100%; box-sizing: border-box; }
+</style>
+</head>
+<body>
+<header>
+  <strong>Agentic Software Factory</strong>
+  <nav>
+    <a href="/">Pedidos</a>
+    <a href="/aprovacoes">Aprovações ({{ n_pendentes }})</a>
+    <a href="/auditoria">Auditoria</a>
+    <a href="/politicas">Políticas</a>
+  </nav>
+  <small>LLM: {{ llm }}</small>
+  <form method="post" action="/login">
+    Utilizador (simulado):
+    <select name="utilizador" onchange="this.form.submit()">
+      {% for uid, u in utilizadores.items() %}
+      <option value="{{ uid }}" {% if uid == utilizador %}selected{% endif %}>{{ u.nome }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</header>
+{% block conteudo %}{% endblock %}
+</body>
+</html>

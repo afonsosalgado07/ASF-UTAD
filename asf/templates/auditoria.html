@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h2>Auditoria</h2>
+<p>Integridade da cadeia de hashes: {% if integra %}✅{% else %}<span class="erro">❌</span>{% endif %} {{ msg_integridade }}</p>
+<form method="get" action="/auditoria">
+  Reconstruir execução:
+  <select name="correlacao">
+    {% for p in pedidos %}<option value="{{ p.id }}" {% if p.id == correlacao %}selected{% endif %}>{{ p.id }} — {{ p.titulo }}</option>{% endfor %}
+  </select>
+  <button>Reconstruir</button>
+</form>
+{% if reconstrucao %}<pre style="max-height:none">{{ reconstrucao }}</pre>{% endif %}
+{% endblock %}

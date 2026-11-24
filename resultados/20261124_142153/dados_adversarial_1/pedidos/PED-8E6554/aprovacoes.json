@@ -1,0 +1,32 @@
+[
+  {
+    "id": "APR-78E8CB",
+    "pedido_id": "PED-8E6554",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "5 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-24T14:24:05",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-24T14:24:05",
+    "comentario": "decisão automática (CLI de cenários — revisor simulado)"
+  },
+  {
+    "id": "APR-3C7AAC",
+    "pedido_id": "PED-8E6554",
+    "tipo": "INTEGRAR_PROPOSTA",
+    "nivel": 2,
+    "resumo": "Integrar proposta v1 no repositório principal",
+    "detalhe": "Risco alto: Altera o módulo de autenticação (sensível para a segurança). 1 requisito(s) sem teste automático — verificação manual necessária. Fontes com confiança reduzida durante a análise: repo:docs/arquitetura.md, repo:docs/legacy-notes.md",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-24T14:24:31",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-24T14:24:31",
+    "comentario": "decisão automática (CLI de cenários — revisor simulado)"
+  }
+]

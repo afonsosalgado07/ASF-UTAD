@@ -1,0 +1,221 @@
+{
+  "_descricao": "Políticas do COMP1 (UC19/UC20). Agentes ou ferramentas não listados ficam bloqueados por defeito (RNF18/RP11).",
+  "ferramentas": {
+    "TL1": {
+      "nome": "Consultar Issue",
+      "tipo": "leitura",
+      "nivel": 0,
+      "argumentos": {
+        "pedido_id": "str"
+      }
+    },
+    "TL2": {
+      "nome": "Consultar Requisitos",
+      "tipo": "leitura",
+      "nivel": 0,
+      "argumentos": {
+        "pedido_id": "str"
+      }
+    },
+    "TL3": {
+      "nome": "Consultar Código",
+      "tipo": "leitura",
+      "nivel": 0,
+      "argumentos": {
+        "caminho": "str"
+      }
+    },
+    "TL4": {
+      "nome": "Consultar Documentação",
+      "tipo": "leitura",
+      "nivel": 0,
+      "argumentos": {
+        "caminho": "str"
+      }
+    },
+    "TL5": {
+      "nome": "Analisar Dependências",
+      "tipo": "analise",
+      "nivel": 0,
+      "argumentos": {
+        "modulo": "str",
+        "pedido_id": "str"
+      }
+    },
+    "TL6": {
+      "nome": "Gerar Proposta",
+      "tipo": "escrita_isolada",
+      "nivel": 1,
+      "argumentos": {
+        "pedido_id": "str",
+        "ficheiros": "dict",
+        "justificacao": "str",
+        "requisitos_ref": "list"
+      }
+    },
+    "TL7": {
+      "nome": "Executar Testes",
+      "tipo": "execucao",
+      "nivel": 1,
+      "argumentos": {
+        "pedido_id": "str",
+        "versao": "int"
+      }
+    },
+    "TL8": {
+      "nome": "Gerar Relatório de Testes",
+      "tipo": "registo",
+      "nivel": 1,
+      "argumentos": {
+        "pedido_id": "str",
+        "versao": "int"
+      }
+    },
+    "TL9": {
+      "nome": "Degradar Confiança de Fonte",
+      "tipo": "classificacao",
+      "nivel": 0,
+      "argumentos": {
+        "pedido_id": "str",
+        "fonte_id": "str",
+        "motivo": "str"
+      }
+    },
+    "TL10": {
+      "nome": "Registar Auditoria",
+      "tipo": "registo",
+      "nivel": 0,
+      "argumentos": {
+        "pedido_id": "str",
+        "tipo": "str",
+        "resumo": "str"
+      }
+    },
+    "TL11": {
+      "nome": "Solicitar Aprovação",
+      "tipo": "controlo",
+      "nivel": 0,
+      "argumentos": {
+        "pedido_id": "str",
+        "tipo": "str",
+        "resumo": "str",
+        "detalhe": "str"
+      }
+    },
+    "TL12": {
+      "nome": "Notificar Utilizador",
+      "tipo": "comunicacao",
+      "nivel": 0,
+      "argumentos": {
+        "pedido_id": "str",
+        "destinatario": "str",
+        "mensagem": "str"
+      }
+    },
+    "TL13": {
+      "nome": "Consultar Proposta",
+      "tipo": "leitura",
+      "nivel": 0,
+      "argumentos": {
+        "pedido_id": "str",
+        "versao": "int"
+      }
+    },
+    "INTEGRAR": {
+      "nome": "Integrar no repositório principal (ação exclusivamente humana)",
+      "tipo": "escrita_principal",
+      "nivel": 2,
+      "argumentos": {
+        "pedido_id": "str",
+        "versao": "int"
+      }
+    }
+  },
+  "matriz_permissoes": {
+    "AG1": [
+      "TL1",
+      "TL2",
+      "TL10",
+      "TL11",
+      "TL12",
+      "TL13"
+    ],
+    "AG2": [
+      "TL1",
+      "TL4",
+      "TL10"
+    ],
+    "AG3": [
+      "TL2",
+      "TL3",
+      "TL4",
+      "TL5",
+      "TL10"
+    ],
+    "AG4": [
+      "TL2",
+      "TL3",
+      "TL6",
+      "TL13",
+      "TL10"
+    ],
+    "AG5": [
+      "TL2",
+      "TL7",
+      "TL8",
+      "TL13",
+      "TL10"
+    ],
+    "AG6": [
+      "TL4",
+      "TL9",
+      "TL13",
+      "TL10"
+    ]
+  },
+  "fontes": [
+    {
+      "padrao": "config:*",
+      "confianca": "T3"
+    },
+    {
+      "padrao": "humano:*",
+      "confianca": "T3"
+    },
+    {
+      "padrao": "issue:*",
+      "confianca": "T2"
+    },
+    {
+      "padrao": "repo:config/*",
+      "confianca": "T1",
+      "sensivel": true
+    },
+    {
+      "padrao": "repo:*",
+      "confianca": "T1"
+    },
+    {
+      "padrao": "ferramenta:*",
+      "confianca": "T1"
+    },
+    {
+      "padrao": "agente:*",
+      "confianca": "T1"
+    },
+    {
+      "padrao": "web:*",
+      "confianca": "T0"
+    }
+  ],
+  "caminhos_escrita_proposta": [
+    "auth/*.py"
+  ],
+  "caminhos_leitura_codigo": [
+    "auth/*",
+    "tests/*"
+  ],
+  "caminhos_leitura_docs": [
+    "docs/*"
+  ]
+}
