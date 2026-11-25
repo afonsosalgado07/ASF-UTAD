@@ -132,18 +132,43 @@ def inicio(request: Request):
     return _render(request, "inicio.html", pedidos=pedidos, resumo=resumo)
 
 
+PRIORIDADES = ["Must", "Should", "Could", "Won't"]
+EXEMPLOS = {"issue_184", "issue_vaga"}   # ficheiros em dados_iniciais/issues/
+
+
+def _form_novo(dados=None) -> dict:
+    d = dados or {}
+    return {"titulo": d.get("titulo", ""), "descricao": d.get("descricao", ""), "criterios": d.get("criterios", ""),
+            "prioridade": d.get("prioridade", "Must"), "llm_manipulado": d.get("llm_manipulado") == "on",
+            "falha_smtp": d.get("falha_smtp") == "on"}
+
+
+@app.get("/pedidos/novo", response_class=HTMLResponse)
+def novo_pedido(request: Request):
+    return _render(request, "novo_pedido.html", form=_form_novo(), prioridades=PRIORIDADES, erro="")
+
+
 @app.post("/pedidos")
 async def criar_pedido(request: Request):
     form = await request.form()
     cenario = {"llm_manipulado": form.get("llm_manipulado") == "on",
                "falha_smtp": form.get("falha_smtp") == "on"}
-    exemplo = form.get("exemplo", "")
-    if exemplo:   # issues de exemplo em dados_iniciais/issues/
+    exemplo = str(form.get("exemplo", ""))
+    if exemplo:
+        if exemplo not in EXEMPLOS:
+            return HTMLResponse("Exemplo desconhecido", status_code=400)
         pid = fabrica.submeter_ficheiro(RAIZ / "dados_iniciais" / "issues" / f"{exemplo}.json", cenario)
     else:
-        pid = fabrica.submeter(form.get("titulo", ""), form.get("descricao", ""),
-                               str(form.get("criterios", "")).splitlines(),
-                               autor=_utilizador(request), cenario=cenario)
+        titulo, descricao = str(form.get("titulo", "")).strip(), str(form.get("descricao", "")).strip()
+        criterios = [c for c in str(form.get("criterios", "")).splitlines() if c.strip()]
+        prioridade = str(form.get("prioridade", "Must"))
+        erro = ("Indique o título do pedido." if not titulo else
+                "Indique a descrição do pedido." if not descricao else
+                "Prioridade inválida." if prioridade not in PRIORIDADES else "")
+        if erro:
+            return _render(request, "novo_pedido.html", form=_form_novo(form), prioridades=PRIORIDADES, erro=erro)
+        pid = fabrica.submeter(titulo, descricao, criterios, autor=_utilizador(request),
+                               cenario=cenario, prioridade=prioridade)
     fabrica.executar_em_fundo(pid)
     return RedirectResponse(f"/pedidos/{pid}", status_code=303)
 

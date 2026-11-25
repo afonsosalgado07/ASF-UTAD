@@ -6,12 +6,6 @@
   .numero { background: var(--cartao); border-radius: 22px; padding: 16px 20px; }
   .numero b { display: block; font-size: 30px; letter-spacing: -1px; }
   .numero span { color: var(--suave); font-size: 13px; }
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-  .tile { border-radius: 22px; padding: 18px 20px; text-align: left; min-height: 96px; display: flex; flex-direction: column;
-          justify-content: space-between; border: 1px solid #fff; background: var(--cartao); color: var(--texto); }
-  .tile.escuro { background: #111; color: #fff; }
-  .tile small { opacity: .65; font-weight: 400; }
-  .opcoes label { display: flex; gap: 8px; align-items: center; margin: 6px 0; }
 </style>
 {% endblock %}
 {% block conteudo %}
@@ -26,32 +20,8 @@
 </div>
 
 <div class="painel">
-  <div class="painel-topo"><h2>Novo pedido</h2></div>
-  <form method="post" action="/pedidos">
-    <div class="tiles">
-      <button class="tile escuro" name="exemplo" value="issue_184">
-        <span>Issue #184 — Password Reset</span><small>Exemplo do protocolo (Anexo A)</small></button>
-      <button class="tile" name="exemplo" value="issue_vaga">
-        <span>Issue #190 — Pedido vago</span><small>Demonstra o pedido de clarificação</small></button>
-    </div>
-    <div class="opcoes" style="margin-top:16px">
-      <b style="font-size:13px">Opções de demonstração</b> <span class="vazio" style="font-size:12px">(ficam registadas na auditoria)</span>
-      {% if llm == 'simulado' %}<label><input type="checkbox" name="llm_manipulado"> LLM simulado manipulado (obedece a instruções injetadas)</label>{% endif %}
-      <label><input type="checkbox" name="falha_smtp"> Serviço SMTP indisponível (cenário de falha)</label>
-    </div>
-    <details style="margin-top:12px">
-      <summary>Escrever um pedido próprio</summary>
-      <label class="campo">Título</label><input type="text" name="titulo" placeholder="ISSUE #201 — …">
-      <label class="campo">Descrição</label><textarea name="descricao" rows="3" placeholder="Como …, quero …, para …"></textarea>
-      <label class="campo">Critérios de aceitação <span class="vazio" style="font-weight:400">(um por linha)</span></label>
-      <textarea name="criterios" rows="4"></textarea>
-      <div class="botoes"><button type="submit" class="btn-preto">Submeter pedido</button></div>
-    </details>
-  </form>
-</div>
-
-<div class="painel">
-  <div class="painel-topo"><h2>Histórico de pedidos</h2></div>
+  <div class="painel-topo"><h2>Histórico de pedidos</h2>
+    <div class="acoes"><a href="/pedidos/novo"><button type="button" class="btn-preto">+ Novo pedido</button></a></div></div>
   <div class="cartao">
   {% if pedidos %}
   <table>
@@ -66,7 +36,7 @@
       <td><a href="/pedidos/{{ p.id }}" class="redondo" style="width:34px;height:34px">{{ icone('seta', 16) }}</a></td>
     </tr>{% endfor %}</tbody>
   </table>
-  {% else %}<p class="vazio" style="margin:0">Ainda não há pedidos.</p>{% endif %}
+  {% else %}<p class="vazio" style="margin:0">Ainda não há pedidos. <a href="/pedidos/novo"><b>Criar o primeiro pedido →</b></a></p>{% endif %}
   </div>
 </div>
 {% endblock %}

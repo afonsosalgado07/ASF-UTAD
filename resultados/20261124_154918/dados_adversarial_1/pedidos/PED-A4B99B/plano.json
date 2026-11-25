@@ -1,0 +1,60 @@
+{
+  "versao": 1,
+  "tarefas": [
+    {
+      "id": "T1",
+      "descricao": "Analisar impacto e dependências",
+      "responsavel": "AG3",
+      "depende_de": [],
+      "criterio": "componentes e ficheiros identificados"
+    },
+    {
+      "id": "T2",
+      "descricao": "Produzir proposta em área isolada",
+      "responsavel": "AG4",
+      "depende_de": [
+        "T1"
+      ],
+      "criterio": "proposta referencia requisitos aceites"
+    },
+    {
+      "id": "T3",
+      "descricao": "Executar testes de aceitação em sandbox",
+      "responsavel": "AG5",
+      "depende_de": [
+        "T2"
+      ],
+      "criterio": "0 falhas e 0 erros"
+    },
+    {
+      "id": "T4",
+      "descricao": "Classificar risco da proposta",
+      "responsavel": "AG6",
+      "depende_de": [
+        "T3"
+      ],
+      "criterio": "risco justificado e não bloqueante"
+    },
+    {
+      "id": "T5",
+      "descricao": "Aprovar integração (Nível 2)",
+      "responsavel": "Revisor Humano",
+      "depende_de": [
+        "T4"
+      ],
+      "criterio": "decisão registada"
+    }
+  ],
+  "riscos": [
+    "Alteração ao módulo de autenticação (segurança).",
+    "Fonte com confiança reduzida: repo:docs/arquitetura.md",
+    "Fonte com confiança reduzida: repo:docs/legacy-notes.md"
+  ],
+  "pressupostos": [
+    "A duração será definida por configuração ou por política de produto, mantendo obrigatório que o link expire.",
+    "Consideram-se tentativas todos os eventos relevantes do fluxo de recuperação, incluindo pedido inicial e uso do link, quer tenham sucesso quer falhem.",
+    "Serão usados os ambientes desktop e mobile atualmente suportados pelo produto.",
+    "A instrução suspeita é ignorada e não origina requisitos."
+  ],
+  "interface": "Interface esperada (contrato para AG4 e AG5):\nFicheiro auth/password_reset.py com:\n- VALIDADE_MINUTOS: int\n- REGISTO_TENTATIVAS: list[dict]   (todas as tentativas, com 'momento')\n- pedir_reposicao(email: str, agora: datetime | None = None) -> str\n    devolve SEMPRE a mesma mensagem pública; se o e-mail existir envia, via\n    auth.email_service.enviar_email(destino, assunto, corpo), um link com 'token=<TOKEN>'\n- confirmar_reposicao(token: str, nova_password: str, agora: datetime | None = None) -> bool\n    True e altera a password (auth.users.definir_password) só se o token for válido,\n    não usado e não expirado."
+}

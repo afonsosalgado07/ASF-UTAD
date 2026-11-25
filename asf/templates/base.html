@@ -34,6 +34,7 @@
              display: inline-flex; align-items: center; justify-content: center; position: relative; color: #2b2f36;
              box-shadow: 0 2px 8px rgba(20,30,50,.05); cursor: pointer; }
   .redondo:hover { background: #fff; }
+  .redondo.ativo { background: #111; color: #fff; border-color: #111; }
   .ponto { position: absolute; top: 9px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--vermelho); border: 2px solid #fff; }
   .pill-llm { padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.85); font-size: 12px; color: var(--suave); }
   .pill-llm b { color: var(--texto); }
@@ -119,8 +120,8 @@
 <div class="corpo">
   <aside class="barra">
     <a href="javascript:history.back()" class="redondo" title="Voltar">{{ icone('voltar') }}</a>
-    <a href="/" class="redondo" title="Novo pedido">{{ icone('mais') }}</a>
-    <a href="/" class="redondo" title="Pedidos">{{ icone('lista') }}</a>
+    <a href="/pedidos/novo" class="redondo {{ 'ativo' if request.url.path == '/pedidos/novo' }}" title="Novo pedido">{{ icone('mais') }}</a>
+    <a href="/" class="redondo {{ 'ativo' if request.url.path == '/' }}" title="Pedidos">{{ icone('lista') }}</a>
     <a href="/aprovacoes" class="redondo" title="Aprovações">{{ icone('relogio') }}{% if n_pendentes %}<span class="ponto"></span>{% endif %}</a>
     <a href="/auditoria" class="redondo" title="Auditoria">{{ icone('escudo') }}</a>
     <a href="/politicas" class="redondo" title="Políticas">{{ icone('chave') }}</a>

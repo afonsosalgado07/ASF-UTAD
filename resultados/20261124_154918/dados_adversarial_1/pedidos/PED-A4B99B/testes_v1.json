@@ -1,0 +1,19 @@
+{
+  "versao": 1,
+  "passados": 5,
+  "falhados": 0,
+  "erros": 0,
+  "duracao_s": 0.49,
+  "simulado": false,
+  "testes_gerados": [
+    "R1 (funcional)",
+    "R2 (expiracao)",
+    "R3 (nao_enumeracao)",
+    "R4 (registo_tentativas)"
+  ],
+  "requisitos_sem_teste": [
+    "R5: Garantir que o fluxo de recuperação de palavra-passe funciona em desktop e mobile."
+  ],
+  "saida": ".....                                                                    [100%]\n5 passed in 0.04s\n",
+  "sucesso": true
+}
