@@ -1,16 +1,33 @@
-{# Formulário de decisão de um pedido de aprovação (usado em várias páginas) #}
-<div class="caixa pendente">
-  <b>{{ a.id }} — {{ a.tipo }}</b> (nível {{ a.nivel }}) · pedido por {{ a.solicitado_por }} em {{ a.criado_em }}<br>
-  {{ a.resumo }}
-  <pre>{{ a.detalhe }}</pre>
-  {% if papel == a.papel_decisor %}
-  <form method="post" action="/aprovacoes/{{ a.id }}">
-    <textarea name="comentario" rows="3" placeholder="{% if a.tipo == 'CLARIFICACAO' %}Resposta ao pedido de clarificação{% else %}Comentário (obrigatório para pedir revisão/correções){% endif %}"></textarea>
-    {% for op in a.opcoes %}
-    <button type="submit" name="decisao" value="{{ op }}">{{ op }}</button>
-    {% endfor %}
-  </form>
-  {% else %}
-  <p class="aviso">Só um utilizador com papel <b>{{ a.papel_decisor }}</b> pode decidir (troque de utilizador no topo).</p>
-  {% endif %}
+{# Cartão de decisão de um pedido de aprovação #}
+{% from "_icones.html" import icone, avatar %}
+<div class="painel" style="border: 2px solid #111;">
+  <div class="painel-topo">
+    {{ avatar('RH', 44) }}
+    <div>
+      <h2>{% if a.tipo == 'CLARIFICACAO' %}Clarificação pedida ao autor
+          {% elif a.tipo == 'VALIDAR_REQUISITOS' %}Validar requisitos
+          {% elif a.tipo == 'INTEGRAR_PROPOSTA' %}Aprovar integração no repositório principal
+          {% else %}Intervenção humana necessária{% endif %}</h2>
+      <span class="vazio" style="font-size:12px">{{ a.id }} · pedido por {{ a.solicitado_por }} · {{ a.criado_em.replace('T', ' ') }}</span>
+    </div>
+    <div class="acoes">
+      {% if a.tipo == 'INTEGRAR_PROPOSTA' %}<span class="pill mau">Nível 2</span>{% endif %}
+      <span class="pill espera">aguarda {{ a.papel_decisor }}</span>
+    </div>
+  </div>
+  <div class="cartao">
+    <b>{{ a.resumo }}</b>
+    <pre>{{ a.detalhe }}</pre>
+    {% if papel == a.papel_decisor %}
+    <form method="post" action="/aprovacoes/{{ a.id }}">
+      <label class="campo">{% if a.tipo == 'CLARIFICACAO' %}Resposta{% else %}Comentário <span class="vazio" style="font-weight:400">(obrigatório para pedir revisão ou correções)</span>{% endif %}</label>
+      <textarea name="comentario" rows="3"></textarea>
+      <div class="botoes">
+        {% for op in a.opcoes %}<button type="submit" name="decisao" value="{{ op }}" class="{{ classe_botao(op) }}">{{ rotulos.get(op, op) }}</button>{% endfor %}
+      </div>
+    </form>
+    {% else %}
+    <div class="aviso espera">{{ icone('alerta') }} Só um utilizador com papel <b>&nbsp;{{ a.papel_decisor }}&nbsp;</b> pode decidir. Troque de utilizador no canto superior direito.</div>
+    {% endif %}
+  </div>
 </div>

@@ -1,17 +1,26 @@
 {% extends "base.html" %}
+{% from "_icones.html" import avatar %}
 {% block conteudo %}
-<h2>Matriz de permissões (COMP1)</h2>
-<p>Lida de <code>politicas.json</code>. O que não está autorizado está bloqueado por defeito.</p>
-<table>
-  <tr><th>Ferramenta</th><th>Tipo</th><th>Nível</th>{% for a in agentes %}<th>{{ a }}</th>{% endfor %}</tr>
-  {% for tid, t in ferramentas.items() %}
-  <tr><td>{{ tid }} — {{ t.nome }}</td><td>{{ t.tipo }}</td><td>{{ t.nivel }}</td>
-    {% for a in agentes %}<td>{% if tid in matriz[a] %}✔{% endif %}</td>{% endfor %}</tr>
-  {% endfor %}
-</table>
-<h2>Classificação de fontes (pela origem)</h2>
-<table>
-  <tr><th>Padrão</th><th>Confiança</th><th>Sensível</th></tr>
-  {% for f in fontes %}<tr><td>{{ f.padrao }}</td><td>{{ f.confianca }}</td><td>{{ 'sim' if f.sensivel else '' }}</td></tr>{% endfor %}
-</table>
+<h1>Políticas</h1>
+<p class="sub">Lidas de <code>politicas.json</code>. O que não está explicitamente autorizado fica bloqueado.</p>
+<div class="painel">
+  <div class="painel-topo"><h2>Matriz agente × ferramenta</h2>{{ avatar('COMP1', 32) }}</div>
+  <div class="cartao">
+  <table>
+    <thead><tr><th>Ferramenta</th><th>Tipo</th><th>Nível</th>{% for a in agentes %}<th style="text-align:center">{{ avatar(a, 34) }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for tid, t in ferramentas.items() %}
+    <tr><td><b>{{ tid }}</b> {{ t.nome }}</td><td><span class="pill cinza">{{ t.tipo }}</span></td>
+      <td><span class="pill {{ 'mau' if t.nivel == 2 else 'espera' if t.nivel == 1 else 'curso' }}">{{ t.nivel }}</span></td>
+      {% for a in agentes %}<td style="text-align:center">{% if tid in matriz[a] %}<b style="color:var(--verde)">✓</b>{% else %}<span style="color:#cfd5de">·</span>{% endif %}</td>{% endfor %}</tr>
+    {% endfor %}</tbody>
+  </table>
+  </div>
+</div>
+<div class="painel">
+  <div class="painel-topo"><h2>Confiança das fontes</h2><span class="vazio" style="font-size:13px">pela origem, nunca pelo conteúdo</span></div>
+  <div class="cartao">
+  <table><thead><tr><th>Padrão de origem</th><th>Confiança</th><th>Sensível</th></tr></thead>
+  <tbody>{% for f in fontes %}<tr><td><code>{{ f.padrao }}</code></td><td><span class="pill {{ 'ok' if f.confianca == 'T3' else 'curso' if f.confianca == 'T2' else 'cinza' if f.confianca == 'T1' else 'mau' }}">{{ f.confianca }}</span></td><td>{{ 'leitura negada' if f.sensivel else '' }}</td></tr>{% endfor %}</tbody></table>
+  </div>
+</div>
 {% endblock %}

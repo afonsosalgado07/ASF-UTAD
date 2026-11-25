@@ -1,13 +1,17 @@
 {% extends "base.html" %}
+{% from "_icones.html" import icone %}
 {% block conteudo %}
-<h2>Auditoria</h2>
-<p>Integridade da cadeia de hashes: {% if integra %}✅{% else %}<span class="erro">❌</span>{% endif %} {{ msg_integridade }}</p>
-<form method="get" action="/auditoria">
-  Reconstruir execução:
-  <select name="correlacao">
-    {% for p in pedidos %}<option value="{{ p.id }}" {% if p.id == correlacao %}selected{% endif %}>{{ p.id }} — {{ p.titulo }}</option>{% endfor %}
-  </select>
-  <button>Reconstruir</button>
-</form>
-{% if reconstrucao %}<pre style="max-height:none">{{ reconstrucao }}</pre>{% endif %}
+<h1>Auditoria</h1>
+<p class="sub">Registo append-only: cada evento guarda o hash do anterior, por isso qualquer alteração é detetada.</p>
+<div class="aviso {{ 'ok' if integra else 'mau' }}">{{ icone('escudo') }}<span><b>{{ 'Cadeia íntegra' if integra else 'Cadeia quebrada' }}</b> — {{ msg_integridade }}</span></div>
+<div class="painel">
+  <div class="painel-topo"><h2>Reconstruir uma execução</h2></div>
+  <form method="get" action="/auditoria" style="display:flex; gap:10px; flex-wrap:wrap">
+    <select name="correlacao" style="flex:1; min-width:280px; padding:10px 14px; border-radius:999px; border:1px solid #fff; background:#fff; font:inherit">
+      {% for p in pedidos %}<option value="{{ p.id }}" {% if p.id == correlacao %}selected{% endif %}>{{ p.id }} — {{ p.titulo }}</option>{% endfor %}
+    </select>
+    <button class="btn-preto">Reconstruir</button>
+  </form>
+  {% if reconstrucao %}<pre style="max-height:none; margin-top:16px">{{ reconstrucao }}</pre>{% endif %}
+</div>
 {% endblock %}

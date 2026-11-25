@@ -1,46 +1,133 @@
+{% from "_icones.html" import icone %}
 <!doctype html>
 <html lang="pt">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agentic Software Factory</title>
 {% block head %}{% endblock %}
 <style>
-  body { font-family: system-ui, sans-serif; max-width: 1100px; margin: 0 auto; padding: 0 16px 40px; color: #222; }
-  header { display: flex; gap: 16px; align-items: center; border-bottom: 1px solid #ccc; padding: 10px 0; margin-bottom: 16px; flex-wrap: wrap; }
-  header nav a { margin-right: 12px; }
-  header form { margin-left: auto; }
-  table { border-collapse: collapse; width: 100%; margin: 8px 0 16px; }
-  th, td { border: 1px solid #ddd; padding: 5px 8px; text-align: left; vertical-align: top; font-size: 14px; }
-  th { background: #f3f3f3; }
-  pre { background: #f6f6f6; padding: 8px; overflow-x: auto; font-size: 12px; max-height: 400px; }
-  .caixa { border: 1px solid #ccc; padding: 10px 14px; margin: 12px 0; border-radius: 4px; }
-  .pendente { border-color: #c80; background: #fff8e6; }
-  .erro { color: #b00; font-weight: bold; }
-  .estado { font-weight: bold; padding: 2px 8px; border-radius: 3px; background: #e8eefc; }
-  .T0 { color: #b00; font-weight: bold; }
-  .aviso { color: #a60; }
-  textarea, input[type=text] { width: 100%; box-sizing: border-box; }
+  :root {
+    --fundo-a: #eef1f6; --fundo-b: #dfe4ec; --texto: #15181e; --suave: #6b7280; --linha: #e3e7ee;
+    --painel: rgba(255,255,255,.55); --cartao: rgba(255,255,255,.92);
+    --azul: #7d9de6; --azul-claro: #e7edfb; --vermelho: #e7726b; --vermelho-claro: #fbe7e5;
+    --laranja: #e9a23b; --laranja-claro: #fdf1dc; --verde: #46a36b; --verde-claro: #e3f3e8;
+    --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: linear-gradient(160deg, var(--fundo-a), var(--fundo-b)); min-height: 100%; }
+  body { margin: 0; font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texto);
+         font-size: 14px; line-height: 1.5; }
+  a { color: inherit; text-decoration: none; }
+  code { font-family: var(--mono); font-size: 12px; background: rgba(0,0,0,.05); padding: 1px 6px; border-radius: 6px; }
+
+  /* ---------- topo ---------- */
+  .topo { display: flex; align-items: center; gap: 24px; padding: 18px 32px; }
+  .marca { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 700; letter-spacing: -.3px; white-space: nowrap; }
+  .marca small { font-weight: 400; color: var(--suave); }
+  .menu { display: flex; gap: 4px; margin: 0 auto; }
+  .menu a { padding: 10px 20px; border-radius: 999px; color: #3b3f47; font-size: 14px; }
+  .menu a:hover { background: rgba(255,255,255,.6); }
+  .menu a.ativo { background: #111; color: #fff; }
+  .direita { display: flex; align-items: center; gap: 10px; }
+  .redondo { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.85); border: 1px solid #fff;
+             display: inline-flex; align-items: center; justify-content: center; position: relative; color: #2b2f36;
+             box-shadow: 0 2px 8px rgba(20,30,50,.05); cursor: pointer; }
+  .redondo:hover { background: #fff; }
+  .ponto { position: absolute; top: 9px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--vermelho); border: 2px solid #fff; }
+  .pill-llm { padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.85); font-size: 12px; color: var(--suave); }
+  .pill-llm b { color: var(--texto); }
+  .seletor { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.85); border-radius: 999px; padding: 3px 12px 3px 3px; }
+  .seletor select { border: none; background: transparent; font: inherit; font-size: 13px; outline: none; cursor: pointer; }
+
+  /* ---------- corpo ---------- */
+  .corpo { display: flex; gap: 24px; padding: 0 32px 48px; }
+  .barra { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
+  main { flex: 1; min-width: 0; }
+  h1 { font-size: 30px; font-weight: 700; letter-spacing: -.8px; margin: 0 0 4px; }
+  .sub { color: var(--suave); margin: 0 0 22px; }
+  .painel { background: var(--painel); border: 1px solid rgba(255,255,255,.9); border-radius: 30px; padding: 24px 26px;
+            margin-bottom: 22px; box-shadow: 0 10px 30px rgba(20,30,50,.05); backdrop-filter: blur(6px); }
+  .painel-topo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .painel-topo h2 { font-size: 17px; font-weight: 600; margin: 0; }
+  .painel-topo .acoes { margin-left: auto; display: flex; gap: 8px; }
+  .cartao { background: var(--cartao); border-radius: 22px; padding: 18px 20px; }
+  .duas { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 1000px) { .duas { grid-template-columns: 1fr; } .menu { display: none; } }
+  .vazio { color: var(--suave); }
+
+  /* ---------- avatares e pílulas ---------- */
+  .avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; color: #fff;
+            font-weight: 700; border: 3px solid #fff; flex-shrink: 0; letter-spacing: -.3px; }
+  .pill { display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+  .pill.curso { background: var(--azul); color: #fff; }
+  .pill.espera { background: var(--laranja); color: #fff; }
+  .pill.ok { background: var(--verde); color: #fff; }
+  .pill.mau { background: var(--vermelho); color: #fff; }
+  .pill.cinza { background: #eceff3; color: #4b5260; }
+
+  /* ---------- tabelas ---------- */
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-weight: 500; color: var(--suave); font-size: 12px; padding: 8px 10px; border-bottom: 1px solid var(--linha); }
+  td { padding: 11px 10px; border-bottom: 1px solid #eef1f5; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+
+  pre { background: #15181e; color: #e6e8ec; padding: 14px 16px; border-radius: 16px; overflow-x: auto;
+        font-family: var(--mono); font-size: 12px; max-height: 420px; white-space: pre-wrap; margin: 8px 0; }
+  details > summary { cursor: pointer; color: #3b3f47; font-weight: 500; margin: 6px 0; }
+
+  /* ---------- formulários e botões ---------- */
+  label.campo { display: block; font-weight: 600; font-size: 13px; margin: 14px 0 6px; }
+  input[type=text], textarea { width: 100%; border: 1px solid #fff; background: rgba(255,255,255,.9); border-radius: 14px;
+                               padding: 10px 14px; font: inherit; outline: none; }
+  input[type=text]:focus, textarea:focus { border-color: #111; }
+  button { font: inherit; font-weight: 500; border-radius: 999px; padding: 10px 22px; cursor: pointer; border: 1px solid transparent; }
+  .btn-preto { background: #111; color: #fff; }
+  .btn-branco { background: #fff; color: #111; border-color: #e3e7ee; }
+  .btn-mau { background: #fff; color: #c8443d; border-color: #f1c4c0; }
+  button:hover { filter: brightness(.94); }
+  .botoes { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+  .aviso { border-radius: 16px; padding: 12px 16px; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; }
+  .aviso.mau { background: var(--vermelho-claro); color: #9c2f29; }
+  .aviso.espera { background: var(--laranja-claro); color: #8a5a10; }
+  .aviso.ok { background: var(--verde-claro); color: #2a6b43; }
+  .aviso.info { background: var(--azul-claro); color: #2f4d97; }
 </style>
 </head>
 <body>
-<header>
-  <strong>Agentic Software Factory</strong>
-  <nav>
-    <a href="/">Pedidos</a>
-    <a href="/aprovacoes">Aprovações ({{ n_pendentes }})</a>
-    <a href="/auditoria">Auditoria</a>
-    <a href="/politicas">Políticas</a>
+<header class="topo">
+  <a href="/" class="marca">{{ icone('camadas', 26) }} ASF <small>Agentic Software Factory</small></a>
+  <nav class="menu">
+    <a href="/" class="{{ 'ativo' if request.url.path == '/' or request.url.path.startswith('/pedidos') }}">Pedidos</a>
+    <a href="/aprovacoes" class="{{ 'ativo' if request.url.path.startswith('/aprovacoes') }}">Aprovações</a>
+    <a href="/auditoria" class="{{ 'ativo' if request.url.path.startswith('/auditoria') }}">Auditoria</a>
+    <a href="/politicas" class="{{ 'ativo' if request.url.path.startswith('/politicas') }}">Políticas</a>
   </nav>
-  <small>LLM: {{ llm }}</small>
-  <form method="post" action="/login">
-    Utilizador (simulado):
-    <select name="utilizador" onchange="this.form.submit()">
-      {% for uid, u in utilizadores.items() %}
-      <option value="{{ uid }}" {% if uid == utilizador %}selected{% endif %}>{{ u.nome }}</option>
-      {% endfor %}
-    </select>
-  </form>
+  <div class="direita">
+    <span class="pill-llm">LLM <b>{{ llm }}</b></span>
+    <a href="/aprovacoes" class="redondo" title="Aprovações pendentes: {{ n_pendentes }}">{{ icone('sino') }}{% if n_pendentes %}<span class="ponto"></span>{% endif %}</a>
+    <form method="post" action="/login" class="seletor">
+      <span class="avatar" style="width:36px;height:36px;font-size:13px;background:{{ {'autor':'#5b7fdb','revisor':'#3f9b62','auditor':'#8a63d2'}[papel] }};border-width:2px">{{ utilizadores[utilizador].nome[0] }}</span>
+      <select name="utilizador" onchange="this.form.submit()" title="Utilizador simulado">
+        {% for uid, u in utilizadores.items() %}<option value="{{ uid }}" {% if uid == utilizador %}selected{% endif %}>{{ u.nome }}</option>{% endfor %}
+      </select>
+    </form>
+  </div>
 </header>
-{% block conteudo %}{% endblock %}
+
+<div class="corpo">
+  <aside class="barra">
+    <a href="javascript:history.back()" class="redondo" title="Voltar">{{ icone('voltar') }}</a>
+    <a href="/" class="redondo" title="Novo pedido">{{ icone('mais') }}</a>
+    <a href="/" class="redondo" title="Pedidos">{{ icone('lista') }}</a>
+    <a href="/aprovacoes" class="redondo" title="Aprovações">{{ icone('relogio') }}{% if n_pendentes %}<span class="ponto"></span>{% endif %}</a>
+    <a href="/auditoria" class="redondo" title="Auditoria">{{ icone('escudo') }}</a>
+    <a href="/politicas" class="redondo" title="Políticas">{{ icone('chave') }}</a>
+  </aside>
+  <main>
+  {% block conteudo %}{% endblock %}
+  </main>
+</div>
 </body>
 </html>

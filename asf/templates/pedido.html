@@ -1,104 +1,215 @@
 {% extends "base.html" %}
-{% block head %}{% if a_correr %}<meta http-equiv="refresh" content="2">{% endif %}{% endblock %}
+{% from "_icones.html" import icone, avatar %}
+{% block head %}
+{% if a_correr %}<meta http-equiv="refresh" content="2">{% endif %}
+<style>
+  .equipa { display: flex; gap: 2px; background: rgba(255,255,255,.7); border-radius: 999px; padding: 6px 10px; margin-left: auto; }
+  .membro { position: relative; text-align: center; }
+  .membro .conta { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700;
+                   min-width: 18px; height: 18px; line-height: 14px; border-radius: 9px; border: 2px solid #fff; color: #fff; padding: 0 4px; }
+  .jornada { display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px; margin-top: 8px; }
+  .coluna { position: relative; display: flex; flex-direction: column; }
+  .coluna:not(:last-child)::after { content: ""; position: absolute; top: 50%; right: -30px; width: 26px; border-top: 2px dashed #b9c3d6; }
+  .coluna .cartao { padding: 8px 12px; flex: 1; }
+  .passo { display: flex; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid #eef1f5; }
+  .passo:last-child { border-bottom: none; }
+  .passo .txt { flex: 1; font-size: 13px; line-height: 1.3; }
+  .passo .txt small { display: block; color: var(--suave); font-size: 11px; }
+  .passo.pendente { opacity: .45; }
+  .passo.atual .txt, .passo.erro .txt { font-weight: 700; }
+  .estado-passo { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+                  border: 1px solid var(--linha); background: #fff; color: var(--suave); }
+  .passo.feito .estado-passo { color: var(--verde); }
+  .passo.atual .estado-passo { background: #111; color: #fff; border-color: #111; }
+  .passo.erro .estado-passo { background: var(--vermelho); color: #fff; border-color: var(--vermelho); }
+  .a-correr .passo.atual .estado-passo { animation: pulsar 1.2s infinite; }
+  @keyframes pulsar { 50% { box-shadow: 0 0 0 7px rgba(17,17,17,.12); } }
+  .rotulo { text-align: center; font-size: 13px; font-weight: 500; color: #3b3f47; margin-top: 12px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+  .donut { width: 150px; height: 150px; border-radius: 50%; position: relative; margin: 6px auto; }
+  .donut::after { content: ""; position: absolute; inset: 26px; background: #fff; border-radius: 50%; }
+  .donut span { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1; }
+  .donut b { font-size: 28px; letter-spacing: -1px; line-height: 1; }
+  .legenda { display: flex; justify-content: center; gap: 14px; font-size: 12px; color: var(--suave); }
+  .legenda i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+  @media (max-width: 1100px) { .jornada { grid-template-columns: 1fr 1fr; } .coluna::after { display: none; } }
+</style>
+{% endblock %}
 {% block conteudo %}
-<h2>{{ p.titulo }}</h2>
-<p>{{ p.id }} · fonte <code>{{ p.fonte_id }}</code> · autor {{ p.autor }} · prioridade {{ p.prioridade }}
-   · estado <span class="estado">{{ p.estado }}</span>
-   {% if a_correr %}<em>(a processar… a página atualiza sozinha)</em>{% endif %}
-   · <a href="/auditoria?correlacao={{ p.id }}">reconstruir pela auditoria</a></p>
-<p>{{ p.descricao }}</p>
-<ul>{% for c in p.criterios %}<li>{{ c }}</li>{% endfor %}</ul>
+{% set ce = classe_estado(p.estado) %}
+<div style="display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap">
+  <div>
+    <h1>{{ p.titulo }}</h1>
+    <div class="meta">
+      <span class="pill {{ ce }}">{{ p.estado }}</span>
+      <span class="pill cinza">{{ p.id }}</span>
+      <span class="pill cinza">fonte {{ p.fonte_id }}</span>
+      <span class="pill cinza">autor {{ p.autor }}</span>
+      <span class="pill cinza">prioridade {{ p.prioridade }}</span>
+      {% for k, v in p.cenario.items() if v %}<span class="pill espera">{{ k }}</span>{% endfor %}
+    </div>
+  </div>
+  <a href="/auditoria?correlacao={{ p.id }}" class="btn-branco" style="margin-left:auto; padding:10px 18px; border-radius:999px; background:#fff; display:inline-flex; gap:8px; align-items:center">{{ icone('escudo', 16) }} Reconstruir pela auditoria</a>
+</div>
 
 {% for a in aprovacoes if a.estado == 'pendente' %}{% include "_aprovacao.html" %}{% endfor %}
 
-{% if requisitos %}
-<h3>Requisitos (AG2) {% if requisitos.validado_por %}— validados por {{ requisitos.validado_por }}{% endif %}</h3>
-<table>
-  <tr><th>Id</th><th>Descrição</th><th>Categoria</th><th>Origem</th><th>Evidência</th></tr>
-  {% for r in requisitos.aceites %}
-  <tr><td>{{ r.id }}</td><td>{{ r.descricao }}</td><td>{{ r.categoria }}</td><td>{{ r.origem }}</td><td>{{ r.evidencia }}</td></tr>
-  {% endfor %}
-</table>
-{% if requisitos.excluidos %}
-<p class="erro">Requisitos EXCLUÍDOS pelo COMP1 (sem proveniência válida):</p>
-<table>
-  <tr><th>Descrição</th><th>Origem declarada</th><th>Motivo</th></tr>
-  {% for r in requisitos.excluidos %}<tr><td>{{ r.descricao }}</td><td>{{ r.origem }}</td><td>{{ r.motivo_exclusao }}</td></tr>{% endfor %}
-</table>
-{% endif %}
-{% if requisitos.ambiguidades %}
-<p><b>Ambiguidades:</b></p>
-<ul>{% for a in requisitos.ambiguidades %}<li>{{ a.pergunta }} {% if a.bloqueante %}<b>(bloqueante)</b>{% else %}— pressuposto: {{ a.pressuposto }}{% endif %}</li>{% endfor %}</ul>
-{% endif %}
-{% endif %}
+<div class="painel {{ 'a-correr' if a_correr }}">
+  <div class="painel-topo">
+    <h2>Jornada do pedido</h2>
+    <div class="equipa">
+      {% for quem, n in contagem_actores(eventos) %}
+      <div class="membro">{{ avatar(quem, 40) }}<span class="conta" style="background:{{ avatares[quem][1] }}">{{ n }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+  {% if a_correr and eventos %}
+  <div class="aviso info">{{ icone('relogio') }}<span><b>{{ eventos[-1].actor }}</b> · {{ eventos[-1].resumo }} <span class="vazio">(a página atualiza sozinha)</span></span></div>
+  {% endif %}
+  <div class="jornada">
+    {% for col in jornada(p) %}
+    <div class="coluna">
+      <div class="cartao">
+        {% for s in col.passos %}
+        <div class="passo {{ s.estado }}">
+          {{ avatar(s.quem, 38) }}
+          <div class="txt">{{ s.texto }}<small>{{ avatares[s.quem][2] }}</small></div>
+          <span class="estado-passo">
+            {% if s.estado == 'feito' %}{{ icone('check2', 18) }}{% elif s.estado == 'erro' %}{{ icone('alerta', 16) }}
+            {% elif s.estado == 'atual' %}{{ icone('relogio', 16) }}{% else %}{{ icone('pontos', 16) }}{% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="rotulo">{{ col.titulo }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
-{% if clarificacoes %}
-<h3>Clarificações do autor</h3>
-<ul>{% for c in clarificacoes %}<li><code>{{ c.fonte_id }}</code>: {{ c.texto }}</li>{% endfor %}</ul>
-{% endif %}
+<div class="duas">
+  <div class="painel">
+    <div class="painel-topo"><h2>Requisitos</h2>{{ avatar('AG2', 32) }}
+      <div class="acoes">{% if requisitos and requisitos.validado_por %}<span class="pill ok">validados por {{ requisitos.validado_por }}</span>{% endif %}</div></div>
+    <div class="cartao">
+    {% if requisitos %}
+      <p style="margin:0 0 8px; font-size:13px"><b>Pedido:</b> {{ p.descricao }}</p>
+      <table>
+        <thead><tr><th>Id</th><th>Requisito</th><th>Categoria</th><th>Origem</th></tr></thead>
+        <tbody>{% for r in requisitos.aceites %}
+        <tr><td><b>{{ r.id }}</b></td><td>{{ r.descricao }}<br><small class="vazio">“{{ r.evidencia }}”</small></td>
+            <td><span class="pill {{ 'cinza' if r.categoria in ['outro', 'multiplataforma'] else 'curso' }}">{{ r.categoria }}</span></td>
+            <td><code>{{ r.origem }}</code></td></tr>
+        {% else %}<tr><td colspan="4" class="vazio">Nenhum requisito aceite.</td></tr>{% endfor %}</tbody>
+      </table>
+      {% if requisitos.excluidos %}
+      <div class="aviso mau">{{ icone('escudo') }}<div><b>{{ requisitos.excluidos|length }} requisito(s) excluído(s) pelo COMP1</b> — sem proveniência válida
+        {% for r in requisitos.excluidos %}<div style="margin-top:6px">“{{ r.descricao }}” <small>— {{ r.motivo_exclusao }}</small></div>{% endfor %}</div></div>
+      {% endif %}
+      {% for a in requisitos.ambiguidades %}
+      <div class="aviso {{ 'mau' if a.bloqueante else 'espera' }}">{{ icone('alerta') }}<span>{{ a.pergunta }} {% if a.bloqueante %}<b>(bloqueante)</b>{% else %}— pressuposto: {{ a.pressuposto }}{% endif %}</span></div>
+      {% endfor %}
+      {% for c in clarificacoes %}<div class="aviso info">{{ icone('check') }}<span>Clarificação: {{ c.texto }}</span></div>{% endfor %}
+    {% else %}
+      <p class="vazio" style="margin:0">Ainda em análise.</p>
+    {% endif %}
+    </div>
+  </div>
 
-{% if fontes %}
-<h3>Fontes com confiança reduzida (AG6 → TL9)</h3>
-<table>
-  <tr><th>Fonte</th><th>Antes</th><th>Agora</th><th>Motivo</th></tr>
-  {% for f, d in fontes.items() %}<tr><td>{{ f }}</td><td>{{ d.anterior }}</td><td class="T0">{{ d.confianca }}</td><td>{{ d.motivo }}</td></tr>{% endfor %}
-</table>
-{% endif %}
-
-{% if plano %}
-<h3>Plano (AG1)</h3>
-<table>
-  <tr><th>Tarefa</th><th>Responsável</th><th>Depende de</th><th>Critério de conclusão</th></tr>
-  {% for t in plano.tarefas %}<tr><td>{{ t.id }} {{ t.descricao }}</td><td>{{ t.responsavel }}</td><td>{{ t.depende_de|join(', ') }}</td><td>{{ t.criterio }}</td></tr>{% endfor %}
-</table>
-<p>Riscos: {{ plano.riscos|join('; ') }}<br>Pressupostos: {{ plano.pressupostos|join('; ') or '—' }}</p>
-{% endif %}
-
-{% if impacto %}
-<h3>Análise de impacto (AG3)</h3>
-<p>Componentes: {{ impacto.componentes_afetados|join(', ') }}<br>
-   Ficheiros lidos: {{ impacto.ficheiros_relevantes|join(', ') }}<br>
-   Riscos: {{ impacto.riscos|join(' ') }}<br>
-   Incertezas: {{ impacto.incertezas|join(' ') }}</p>
-{% if impacto.acessos_negados %}
-<p class="erro">Acessos negados pelo COMP1:</p>
-<ul>{% for n in impacto.acessos_negados %}<li>{{ n.caminho }} — {{ n.motivo }}</li>{% endfor %}</ul>
-{% endif %}
-{% endif %}
+  <div class="painel">
+    {% set v = versoes[0] if versoes else None %}
+    <div class="painel-topo"><h2>Testes e risco</h2>{{ avatar('AG5', 32) }}{{ avatar('AG6', 32) }}
+      <div class="acoes">{% if v %}<span class="pill cinza">proposta v{{ v.proposta.versao }}</span>{% endif %}</div></div>
+    <div class="cartao">
+    {% if v and v.testes %}
+      {% set total = v.testes.passados + v.testes.falhados + v.testes.erros %}
+      {% set pct = (100 * v.testes.passados / total)|round|int if total else 0 %}
+      <div class="duas" style="gap:10px; align-items:center">
+        <div>
+          <div class="donut" style="background: conic-gradient(var(--azul) 0 {{ pct }}%, var(--vermelho) {{ pct }}% 100%)">
+            <span><b>{{ v.testes.passados }}/{{ total }}</b><small class="vazio">testes</small></span></div>
+          <div class="legenda"><span><i style="background:var(--azul)"></i>passados</span><span><i style="background:var(--vermelho)"></i>falhados/erros</span></div>
+        </div>
+        <div>
+          {% if v.risco %}
+          <div class="aviso {{ 'mau' if v.risco.nivel in ['alto', 'bloqueante'] else 'ok' }}" style="margin-top:0">Risco <b>&nbsp;{{ v.risco.nivel }}</b></div>
+          <ul style="margin:0; padding-left:18px; font-size:13px">{% for f in v.risco.fatores %}<li>{{ f }}</li>{% endfor %}</ul>
+          {% else %}<p class="vazio">Risco ainda não avaliado.</p>{% endif %}
+        </div>
+      </div>
+      {% if v.testes.requisitos_sem_teste %}
+      <div class="aviso espera">{{ icone('alerta') }}<span>Sem teste automático (verificação manual): {{ v.testes.requisitos_sem_teste|join('; ') }}</span></div>
+      {% endif %}
+    {% else %}
+      <p class="vazio" style="margin:0">Ainda não há testes executados.</p>
+    {% endif %}
+    {% if fontes %}
+      {% for f, d in fontes.items() %}
+      <div class="aviso mau">{{ icone('escudo') }}<span>Fonte <code>{{ f }}</code> desceu de {{ d.anterior }} para <b>{{ d.confianca }}</b> — {{ d.motivo }}</span></div>
+      {% endfor %}
+    {% endif %}
+    {% if impacto and impacto.acessos_negados %}
+      {% for n in impacto.acessos_negados %}
+      <div class="aviso mau">{{ icone('escudo') }}<span>Acesso negado a <code>{{ n.caminho }}</code> — {{ n.motivo }}</span></div>
+      {% endfor %}
+    {% endif %}
+    </div>
+  </div>
+</div>
 
 {% for v in versoes %}
-<h3>Proposta v{{ v.proposta.versao }} (AG4) — {{ v.proposta.estado }}</h3>
-<p>{{ v.proposta.justificacao }}<br>Requisitos: {{ v.proposta.requisitos_ref|join(', ') }}</p>
-<details><summary>Diff</summary><pre>{{ v.proposta.diff }}</pre></details>
-{% if v.testes %}
-<p><b>Testes (AG5):</b> {{ v.testes.passados }} passados, {{ v.testes.falhados }} falhados, {{ v.testes.erros }} erros
-  — {% if v.testes.sucesso %}✅{% else %}❌{% endif %}</p>
-<pre>{{ v.relatorio }}</pre>
-<details><summary>Saída do pytest</summary><pre>{{ v.testes.saida }}</pre></details>
-{% endif %}
-{% if v.risco %}
-<p><b>Risco (AG6): {{ v.risco.nivel }}</b></p>
-<ul>{% for f in v.risco.fatores %}<li>{{ f }}</li>{% endfor %}</ul>
-{% endif %}
+<div class="painel">
+  <div class="painel-topo"><h2>Proposta v{{ v.proposta.versao }}</h2>{{ avatar('AG4', 32) }}
+    <div class="acoes"><span class="pill {{ 'ok' if v.proposta.estado == 'Integrada' else 'espera' if v.proposta.estado == 'Aguarda aprovação' else 'mau' if v.proposta.estado in ['Rejeitada', 'Substituída', 'Testes falhados', 'Bloqueada pela revisão'] else 'curso' }}">{{ v.proposta.estado }}</span></div></div>
+  <div class="cartao">
+    <p style="margin-top:0">{{ v.proposta.justificacao }}</p>
+    <p style="font-size:13px; margin-bottom:0">Implementa {% for r in v.proposta.requisitos_ref %}<span class="pill cinza">{{ r }}</span> {% endfor %}
+      · ficheiros {% for f in v.proposta.ficheiros %}<code>{{ f }}</code> {% endfor %}</p>
+    <details><summary>Ver diff</summary><pre>{{ v.proposta.diff }}</pre></details>
+    {% if v.testes %}<details><summary>Relatório e saída dos testes</summary><pre>{{ v.relatorio }}
+
+{{ v.testes.saida }}</pre></details>{% endif %}
+  </div>
+</div>
 {% endfor %}
 
-<h3>Aprovações</h3>
-<table>
-  <tr><th>Id</th><th>Tipo</th><th>Estado</th><th>Decisão</th><th>Por</th><th>Quando</th><th>Comentário</th></tr>
-  {% for a in aprovacoes %}
-  <tr><td>{{ a.id }}</td><td>{{ a.tipo }}</td><td>{{ a.estado }}</td><td>{{ a.decisao }}</td><td>{{ a.decidido_por }}</td><td>{{ a.decidido_em }}</td><td>{{ a.comentario }}</td></tr>
-  {% endfor %}
-</table>
+<div class="duas">
+  {% if plano %}
+  <div class="painel">
+    <div class="painel-topo"><h2>Plano</h2>{{ avatar('AG1', 32) }}</div>
+    <div class="cartao">
+      <table><thead><tr><th>Tarefa</th><th>Responsável</th><th>Depende</th></tr></thead>
+      <tbody>{% for t in plano.tarefas %}<tr><td><b>{{ t.id }}</b> {{ t.descricao }}<br><small class="vazio">{{ t.criterio }}</small></td><td>{{ t.responsavel }}</td><td>{{ t.depende_de|join(', ') or '—' }}</td></tr>{% endfor %}</tbody></table>
+    </div>
+  </div>
+  {% endif %}
+  {% if impacto %}
+  <div class="painel">
+    <div class="painel-topo"><h2>Análise de impacto</h2>{{ avatar('AG3', 32) }}</div>
+    <div class="cartao" style="font-size:13px">
+      <p style="margin-top:0"><b>Componentes:</b> {{ impacto.componentes_afetados|join(', ') }}</p>
+      <p><b>Ficheiros lidos:</b> {% for f in impacto.ficheiros_relevantes %}<code>{{ f }}</code> {% endfor %}</p>
+      <p style="margin-bottom:4px"><b>Riscos</b></p><ul style="margin-top:0">{% for r in impacto.riscos %}<li>{{ r }}</li>{% endfor %}</ul>
+      {% if impacto.incertezas %}<p style="margin-bottom:0"><b>Incertezas:</b> {{ impacto.incertezas|join(' ') }}</p>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
 
-<h3>Histórico de estados</h3>
-<table>
-  <tr><th>Momento</th><th>De</th><th>Para</th><th>Motivo</th></tr>
-  {% for h in p.historico %}<tr><td>{{ h[0] }}</td><td>{{ h[1] }}</td><td>{{ h[2] }}</td><td>{{ h[3] }}</td></tr>{% endfor %}
-</table>
-
-<h3>Eventos de auditoria ({{ eventos|length }})</h3>
-<table>
-  <tr><th>#</th><th>Hora</th><th>Actor</th><th>Tipo</th><th>Resumo</th></tr>
-  {% for e in eventos %}<tr><td>{{ e.seq }}</td><td>{{ e.momento[11:] }}</td><td>{{ e.actor }}</td><td>{{ e.tipo }}</td><td>{{ e.resumo }}</td></tr>{% endfor %}
-</table>
+<div class="painel">
+  <div class="painel-topo"><h2>Decisões e registos</h2>{{ avatar('RH', 32) }}</div>
+  <div class="cartao">
+    <table><thead><tr><th>Tipo</th><th>Estado</th><th>Decisão</th><th>Por</th><th>Quando</th><th>Comentário</th></tr></thead>
+    <tbody>{% for a in aprovacoes %}
+      <tr><td>{{ a.tipo }}</td><td><span class="pill {{ 'espera' if a.estado == 'pendente' else 'ok' }}">{{ a.estado }}</span></td>
+        <td>{{ a.decisao or '—' }}</td><td>{{ a.decidido_por or '—' }}</td><td class="vazio">{{ a.decidido_em.replace('T', ' ') or '—' }}</td><td>{{ a.comentario }}</td></tr>
+    {% else %}<tr><td colspan="6" class="vazio">Ainda sem decisões.</td></tr>{% endfor %}</tbody></table>
+    <details style="margin-top:10px"><summary>Histórico de estados ({{ p.historico|length }}) e eventos de auditoria ({{ eventos|length }})</summary>
+      <table><thead><tr><th>Hora</th><th>De</th><th>Para</th><th>Motivo</th></tr></thead>
+      <tbody>{% for h in p.historico %}<tr><td class="vazio">{{ h[0][11:] }}</td><td>{{ h[1] }}</td><td>{{ h[2] }}</td><td>{{ h[3] }}</td></tr>{% endfor %}</tbody></table>
+      <table style="margin-top:14px"><thead><tr><th>#</th><th>Hora</th><th>Actor</th><th>Tipo</th><th>Resumo</th></tr></thead>
+      <tbody>{% for e in eventos %}<tr><td class="vazio">{{ e.seq }}</td><td class="vazio">{{ e.momento[11:] }}</td><td><b>{{ e.actor }}</b></td><td><code>{{ e.tipo }}</code></td><td>{{ e.resumo }}</td></tr>{% endfor %}</tbody></table>
+    </details>
+  </div>
+</div>
 {% endblock %}

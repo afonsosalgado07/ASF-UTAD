@@ -1,12 +1,13 @@
 {% extends "base.html" %}
+{% from "_icones.html" import icone %}
 {% block conteudo %}
-<h2>Aprovações pendentes</h2>
-{% if erro %}<p class="erro">Decisão recusada: {{ erro }}</p>{% endif %}
-<p>Está a atuar como <b>{{ utilizadores[utilizador].nome }}</b> (papel: {{ papel }}).</p>
+<h1>Aprovações</h1>
+<p class="sub">A atuar como <b>{{ utilizadores[utilizador].nome }}</b>. Só humanos decidem: os agentes apenas criam os pedidos de aprovação.</p>
+{% if erro %}<div class="aviso mau">{{ icone('alerta') }}<span><b>Decisão recusada:</b> {{ erro }}</span></div>{% endif %}
 {% for a in pendentes %}
-  <p><a href="/pedidos/{{ a.pedido_id }}">{{ a.pedido_id }} — {{ pedidos[a.pedido_id].titulo }}</a></p>
+  <p style="margin:6px 0 8px"><a href="/pedidos/{{ a.pedido_id }}"><span class="pill cinza">{{ a.pedido_id }}</span> <b>{{ pedidos[a.pedido_id].titulo }}</b></a></p>
   {% include "_aprovacao.html" %}
 {% else %}
-  <p>Não há aprovações pendentes.</p>
+  <div class="painel"><div class="cartao vazio">{{ icone('check') }} Não há aprovações pendentes.</div></div>
 {% endfor %}
 {% endblock %}
