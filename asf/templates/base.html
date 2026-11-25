@@ -119,7 +119,7 @@
 
 <div class="corpo">
   <aside class="barra">
-    <a href="javascript:history.back()" class="redondo" title="Voltar">{{ icone('voltar') }}</a>
+    <a href="/" class="redondo" title="Voltar" onclick="return voltarNoSite()">{{ icone('voltar') }}</a>
     <a href="/pedidos/novo" class="redondo {{ 'ativo' if request.url.path == '/pedidos/novo' }}" title="Novo pedido">{{ icone('mais') }}</a>
     <a href="/" class="redondo {{ 'ativo' if request.url.path == '/' }}" title="Pedidos">{{ icone('lista') }}</a>
     <a href="/aprovacoes" class="redondo" title="Aprovações">{{ icone('relogio') }}{% if n_pendentes %}<span class="ponto"></span>{% endif %}</a>
@@ -130,5 +130,19 @@
   {% block conteudo %}{% endblock %}
   </main>
 </div>
+<script>
+  // Só recua no histórico se a página anterior for deste site; caso contrário vai para o início.
+  function voltarNoSite() {
+    try {
+      var ref = document.referrer ? new URL(document.referrer) : null;
+      if (ref && ref.origin === location.origin && ref.href !== location.href && history.length > 1) {
+        history.back();
+        return false;
+      }
+    } catch (e) {}
+    if (location.pathname === '/') return false;  // já no início: não faz nada
+    return true;  // segue o href="/"
+  }
+</script>
 </body>
 </html>
