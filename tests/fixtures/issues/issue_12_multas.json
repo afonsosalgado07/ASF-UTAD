@@ -1,0 +1,13 @@
+{
+  "fonte_id": "issue:12",
+  "titulo": "ISSUE #12 — Multas por atraso na devolução",
+  "descricao": "Como bibliotecário, quero que o sistema calcule uma multa quando um livro é devolvido depois do prazo, para incentivar os sócios a devolverem os livros a tempo.",
+  "criterios": [
+    "Cada dia de atraso custa 0,50 €.",
+    "A multa de um empréstimo não pode ultrapassar 10 €.",
+    "Uma devolução dentro do prazo não gera multa.",
+    "Um sócio com multas por pagar acima de 5 € não pode requisitar livros.",
+    "O sócio recebe um e-mail com o valor da multa."
+  ],
+  "prioridade": "Must"
+}

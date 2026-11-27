@@ -29,6 +29,12 @@ class Redator:
     def __init__(self, segredos: list[str] | None = None):
         self.segredos = [s for s in (segredos or []) if s]
 
+    def adicionar(self, segredos: list[str]) -> None:
+        """Acrescenta segredos conhecidos (ex.: credenciais dos ficheiros sensíveis de um projeto)."""
+        for s in segredos:
+            if s and s not in self.segredos:
+                self.segredos.append(s)
+
     def limpar(self, texto):
         if not isinstance(texto, str):
             return texto
@@ -53,6 +59,9 @@ class Auditoria:
         self.ficheiro.parent.mkdir(parents=True, exist_ok=True)
         self.redator = redator
         self._lock = threading.Lock()
+        # Função que dá o projeto de uma correlação (pedido). Definida pela Fabrica; assim TODOS os
+        # eventos levam o projetoId sem que cada chamador o tenha de passar.
+        self.projeto_de = lambda correlacao: ""
         self._seq = 0
         self._ultimo_hash = "0" * 64
         for ev in self._ler_todos():
@@ -75,6 +84,7 @@ class Auditoria:
                 "seq": self._seq,
                 "momento": agora(),
                 "correlacao": correlacao,
+                "projeto": str(dados.pop("projeto", "") or self.projeto_de(correlacao) or ""),
                 "tipo": tipo,
                 "actor": actor,
                 "resumo": self.redator.limpar(resumo),
@@ -87,8 +97,9 @@ class Auditoria:
                 f.write(json.dumps(ev, ensure_ascii=False) + "\n")
         return ev
 
-    def eventos(self, correlacao: str | None = None) -> list[dict]:
-        return [e for e in self._ler_todos() if correlacao is None or e["correlacao"] == correlacao]
+    def eventos(self, correlacao: str | None = None, projeto: str | None = None) -> list[dict]:
+        return [e for e in self._ler_todos() if (correlacao is None or e["correlacao"] == correlacao)
+                and (projeto is None or e.get("projeto") == projeto)]
 
     def verificar_integridade(self) -> tuple[bool, str]:
         anterior = "0" * 64

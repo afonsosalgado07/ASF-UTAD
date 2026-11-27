@@ -121,6 +121,16 @@
         "versao": "int"
       }
     },
+    "TL14": {
+      "nome": "Gerar Testes de Aceitação",
+      "tipo": "escrita_isolada",
+      "nivel": 1,
+      "argumentos": {
+        "pedido_id": "str",
+        "ficheiros": "dict",
+        "sem_teste": "list"
+      }
+    },
     "INTEGRAR": {
       "nome": "Integrar no repositório principal (ação exclusivamente humana)",
       "tipo": "escrita_principal",
@@ -162,9 +172,11 @@
     ],
     "AG5": [
       "TL2",
+      "TL3",
       "TL7",
       "TL8",
       "TL13",
+      "TL14",
       "TL10"
     ],
     "AG6": [
@@ -188,7 +200,17 @@
       "confianca": "T2"
     },
     {
-      "padrao": "repo:config/*",
+      "padrao": "repo:*.env",
+      "confianca": "T1",
+      "sensivel": true
+    },
+    {
+      "padrao": "repo:*.pem",
+      "confianca": "T1",
+      "sensivel": true
+    },
+    {
+      "padrao": "repo:*.key",
       "confianca": "T1",
       "sensivel": true
     },
@@ -210,13 +232,16 @@
     }
   ],
   "caminhos_escrita_proposta": [
-    "auth/*.py"
+    "{codigo}/*"
   ],
   "caminhos_leitura_codigo": [
-    "auth/*",
-    "tests/*"
+    "{codigo}/*",
+    "{testes}/*"
   ],
   "caminhos_leitura_docs": [
-    "docs/*"
+    "{docs}/*"
+  ],
+  "caminhos_escrita_testes": [
+    "{testes}/test_aceitacao_*.py"
   ]
 }

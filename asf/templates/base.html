@@ -79,6 +79,8 @@
 
   /* ---------- formulários e botões ---------- */
   label.campo { display: block; font-weight: 600; font-size: 13px; margin: 14px 0 6px; }
+  select.campo-sel { border: 1px solid #fff; background: rgba(255,255,255,.9); border-radius: 14px; padding: 10px 14px; font: inherit; outline: none; }
+  input[type=file] { font: inherit; font-size: 13px; }
   input[type=text], textarea { width: 100%; border: 1px solid #fff; background: rgba(255,255,255,.9); border-radius: 14px;
                                padding: 10px 14px; font: inherit; outline: none; }
   input[type=text]:focus, textarea:focus { border-color: #111; }
@@ -100,7 +102,8 @@
 <header class="topo">
   <a href="/" class="marca">{{ icone('camadas', 26) }} ASF <small>Agentic Software Factory</small></a>
   <nav class="menu">
-    <a href="/" class="{{ 'ativo' if request.url.path == '/' or request.url.path.startswith('/pedidos') }}">Pedidos</a>
+    <a href="/projetos" class="{{ 'ativo' if request.url.path.startswith('/projetos') }}">Projetos</a>
+    <a href="/" class="{{ 'ativo' if request.url.path == '/' or request.url.path.startswith('/pedidos') }}">Issues</a>
     <a href="/aprovacoes" class="{{ 'ativo' if request.url.path.startswith('/aprovacoes') }}">Aprovações</a>
     <a href="/auditoria" class="{{ 'ativo' if request.url.path.startswith('/auditoria') }}">Auditoria</a>
     <a href="/politicas" class="{{ 'ativo' if request.url.path.startswith('/politicas') }}">Políticas</a>
@@ -108,8 +111,17 @@
   <div class="direita">
     <span class="pill-llm">LLM <b>{{ llm }}</b></span>
     <a href="/aprovacoes" class="redondo" title="Aprovações pendentes: {{ n_pendentes }}">{{ icone('sino') }}{% if n_pendentes %}<span class="ponto"></span>{% endif %}</a>
+    {% if projetos_todos %}
+    <form method="post" action="/projeto-ativo" class="seletor" title="Projeto ativo">
+      {{ icone('pasta', 16) }}
+      <select name="projeto" onchange="this.form.submit()">
+        {% if not projeto_ativo %}<option value="">Escolher projeto…</option>{% endif %}
+        {% for pr in projetos_todos %}<option value="{{ pr.id }}" {% if projeto_ativo and pr.id == projeto_ativo.id %}selected{% endif %}>{{ pr.nome }}</option>{% endfor %}
+      </select>
+    </form>
+    {% endif %}
     <form method="post" action="/login" class="seletor">
-      <span class="avatar" style="width:36px;height:36px;font-size:13px;background:{{ {'autor':'#5b7fdb','revisor':'#3f9b62','auditor':'#8a63d2'}[papel] }};border-width:2px">{{ utilizadores[utilizador].nome[0] }}</span>
+      <span class="avatar" style="width:36px;height:36px;font-size:13px;background:{{ {'autor':'#5b7fdb','revisor':'#3f9b62','auditor':'#8a63d2','gestor':'#b7791f'}[papel] }};border-width:2px">{{ utilizadores[utilizador].nome[0] }}</span>
       <select name="utilizador" onchange="this.form.submit()" title="Utilizador simulado">
         {% for uid, u in utilizadores.items() %}<option value="{{ uid }}" {% if uid == utilizador %}selected{% endif %}>{{ u.nome }}</option>{% endfor %}
       </select>
@@ -121,7 +133,8 @@
   <aside class="barra">
     <a href="/" class="redondo" title="Voltar" onclick="return voltarNoSite()">{{ icone('voltar') }}</a>
     <a href="/pedidos/novo" class="redondo {{ 'ativo' if request.url.path == '/pedidos/novo' }}" title="Novo pedido">{{ icone('mais') }}</a>
-    <a href="/" class="redondo {{ 'ativo' if request.url.path == '/' }}" title="Pedidos">{{ icone('lista') }}</a>
+    <a href="/projetos" class="redondo {{ 'ativo' if request.url.path.startswith('/projetos') }}" title="Projetos">{{ icone('pasta') }}</a>
+    <a href="/" class="redondo {{ 'ativo' if request.url.path == '/' }}" title="Issues">{{ icone('lista') }}</a>
     <a href="/aprovacoes" class="redondo" title="Aprovações">{{ icone('relogio') }}{% if n_pendentes %}<span class="ponto"></span>{% endif %}</a>
     <a href="/auditoria" class="redondo" title="Auditoria">{{ icone('escudo') }}</a>
     <a href="/politicas" class="redondo" title="Políticas">{{ icone('chave') }}</a>

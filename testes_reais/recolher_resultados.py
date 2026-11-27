@@ -16,18 +16,28 @@ sys.path.insert(0, str(RAIZ))
 
 from asf.auditoria import Auditoria, Redator  # noqa: E402
 from asf.config import carregar  # noqa: E402
+from asf.projetos import segredos_do_repositorio  # noqa: E402
 from asf.store import Store  # noqa: E402
 
 DADOS = RAIZ / "dados"
-SEGREDOS = ["Segredo-De-Teste-9f3a"] + [s for s in [carregar()["iaedu"]["api_key"]] if s]
+
+
+def segredos_conhecidos() -> list[str]:
+    """Chave da API + credenciais dos ficheiros sensíveis de todos os projetos registados."""
+    s = [x for x in [carregar()["iaedu"]["api_key"]] if x]
+    if DADOS.exists():
+        store = Store(DADOS)
+        for p in store.listar_projetos():
+            s += segredos_do_repositorio(store.pasta_repo(p.id), p.caminhos_sensiveis + ["*.env"])
+    return s
 
 
 def segredo_exposto() -> list[str]:
-    achados = []
+    achados, segredos = [], segredos_conhecidos()
     for f in DADOS.rglob("*"):
-        if f.is_file() and f.suffix in (".json", ".jsonl") and "repo_principal" not in f.parts:
+        if f.is_file() and f.suffix in (".json", ".jsonl") and "repo" not in f.parts:
             texto = f.read_text(encoding="utf-8", errors="ignore")
-            achados += [f"{f.relative_to(DADOS)}" for s in SEGREDOS if s in texto]
+            achados += [f"{f.relative_to(DADOS)}" for s in segredos if s in texto]
     return achados
 
 
@@ -46,7 +56,9 @@ def linha(store: Store, audit: Auditoria, p) -> dict:
               f"Requisitos: {len(req.get('aceites', []))} aceites, {len(req.get('excluidos', []))} excluídos.",
               f"Propostas: {p.iteracao}."]
     if t:
-        obtido.append(f"Testes v{p.iteracao}: {t.get('passados', 0)} passados, {t.get('falhados', 0)} falhados, "
+        reg, ac = t.get("regressao", {}), t.get("aceitacao", {})
+        obtido.append(f"Testes v{p.iteracao}: regressão {reg.get('passou', 0)} ok/{reg.get('falhou', 0) + reg.get('erro', 0)} falha; "
+                      f"aceitação {ac.get('passou', 0)} ok/{ac.get('falhou', 0) + ac.get('erro', 0)} falha; "
                       f"{len(t.get('requisitos_sem_teste', []))} req. sem teste.")
     for nome, chave in (("falhas de ferramenta", "falha_ferramenta"), ("falhas do LLM", "falha_llm"),
                         ("chamadas bloqueadas", "chamada_bloqueada"), ("tentativas de manipulação", "tentativa_manipulacao"),
@@ -56,7 +68,7 @@ def linha(store: Store, audit: Auditoria, p) -> dict:
     if imp.get("acessos_negados"):
         obtido.append("Acessos negados: " + ", ".join(n["caminho"] for n in imp["acessos_negados"]) + ".")
     cen = ", ".join(k for k, v in p.cenario.items() if v) or "normal"
-    return {"Teste": "", "Pedido": p.id, "Criado": p.criado_em.replace("T", " "),
+    return {"Teste": "", "Pedido": p.id, "Projeto": p.projeto_id, "Criado": p.criado_em.replace("T", " "),
             "Entrada": f"{p.titulo} [{cen}]", "Resultado esperado": "", "Resultado obtido": " ".join(obtido),
             "Agentes/ferramentas": ", ".join(agentes) + " | " + ", ".join(ferr),
             "Aprovação": "; ".join(decisoes) or "—", "Estado": "", "Análise": ""}

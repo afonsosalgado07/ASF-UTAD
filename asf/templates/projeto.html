@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% from "_icones.html" import icone, avatar %}
+{% block head %}
+<style>
+  .arvore { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 12px; max-height: 460px; overflow: auto; }
+  .arvore li { padding: 4px 6px; border-radius: 8px; display: flex; gap: 6px; align-items: center; }
+  .arvore li a:hover { text-decoration: underline; }
+  .arvore li.sel { background: var(--azul-claro); }
+  .arvore .sens { color: #c8443d; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0; font-size: 13px; }
+  dt { color: var(--suave); }
+  dd { margin: 0; }
+</style>
+{% endblock %}
+{% block conteudo %}
+<div style="display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap">
+  <div>
+    <h1>{{ proj.nome }}</h1>
+    <div class="meta" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px">
+      <span class="pill cinza">{{ proj.id }}</span>
+      <span class="pill cinza">registado por {{ proj.criado_por }} · {{ proj.criado_em.replace('T', ' ') }}</span>
+      {% if proj.origem %}<span class="pill cinza">origem {{ proj.origem }}</span>{% endif %}
+    </div>
+  </div>
+  <form method="post" action="/projeto-ativo" style="margin-left:auto; display:flex; gap:8px">
+    <input type="hidden" name="projeto" value="{{ proj.id }}">
+    {% if not projeto_ativo or projeto_ativo.id != proj.id %}<button type="submit" name="voltar" value="/" class="btn-branco">Selecionar este projeto</button>{% endif %}
+    <button type="submit" name="voltar" value="/pedidos/novo" class="btn-preto">+ Nova Issue neste projeto</button>
+  </form>
+</div>
+{% if proj.descricao %}<p class="sub">{{ proj.descricao }}</p>{% endif %}
+
+<div class="duas">
+  <div class="painel">
+    <div class="painel-topo"><h2>Configuração</h2>{{ avatar('GP', 32) }}</div>
+    <div class="cartao">
+      <dl>
+        <dt>Código (escrita do AG4)</dt><dd><code>{{ proj.pasta_codigo }}/</code></dd>
+        <dt>Testes</dt><dd><code>{{ proj.pasta_testes }}/</code> — existentes = regressão; o AG5 só escreve <code>test_aceitacao_*.py</code></dd>
+        <dt>Documentação</dt><dd>{% if proj.pasta_docs %}<code>{{ proj.pasta_docs }}/</code> (contexto, T1){% else %}<span class="vazio">nenhuma</span>{% endif %}</dd>
+        <dt>Sensíveis</dt><dd>{% for c in proj.caminhos_sensiveis %}<code>{{ c }}</code> {% else %}<span class="vazio">nenhum</span>{% endfor %} <span class="vazio">+ *.env, *.pem, *.key (globais)</span></dd>
+        <dt>Áreas críticas</dt><dd>{% for c in proj.areas_criticas %}<code>{{ c }}</code> {% else %}<span class="vazio">nenhuma</span>{% endfor %}</dd>
+      </dl>
+      <details style="margin-top:10px"><summary>Caminhos efetivos no COMP1</summary>
+        <dl style="margin-top:8px">
+          <dt>TL6 escrita proposta</dt><dd>{% for c in politicas.caminhos_escrita_proposta %}<code>{{ c }}</code> {% endfor %}</dd>
+          <dt>TL14 escrita testes</dt><dd>{% for c in politicas.caminhos_escrita_testes %}<code>{{ c }}</code> {% endfor %}</dd>
+          <dt>TL3 leitura código</dt><dd>{% for c in politicas.caminhos_leitura_codigo %}<code>{{ c }}</code> {% endfor %}</dd>
+          <dt>TL4 leitura docs</dt><dd>{% for c in politicas.caminhos_leitura_docs %}<code>{{ c }}</code> {% else %}<span class="vazio">nenhum</span>{% endfor %}</dd>
+        </dl>
+      </details>
+    </div>
+  </div>
+
+  <div class="painel">
+    <div class="painel-topo"><h2>Pedidos</h2><span class="pill cinza">{{ pedidos|length }}</span></div>
+    <div class="cartao">
+      {% if pedidos %}
+      <table><tbody>{% for p in pedidos %}
+        <tr><td><a href="/pedidos/{{ p.id }}"><b>{{ p.titulo }}</b></a><br><small class="vazio">{{ p.id }} · {{ p.criado_em.replace('T', ' ') }}</small></td>
+            <td><span class="pill {{ classe_estado(p.estado) }}">{{ p.estado }}</span></td></tr>
+      {% endfor %}</tbody></table>
+      {% else %}<p class="vazio" style="margin:0">Ainda sem pedidos.</p>{% endif %}
+      {% if integracoes %}
+      <p style="margin:14px 0 4px; font-weight:600; font-size:13px">Integrações no repositório principal</p>
+      {% for e in integracoes %}<div class="aviso ok" style="margin:4px 0">{{ icone('check') }}<span>{{ e.momento.replace('T', ' ') }} · <b>{{ e.actor }}</b> · {{ e.dados.ficheiros|join(', ') }}</span></div>{% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="painel">
+  <div class="painel-topo"><h2>Repositório principal</h2><span class="pill cinza">{{ ficheiros|length }} ficheiros</span>
+    <span class="vazio" style="font-size:12px">só muda quando um revisor aprova uma integração (Nível 2)</span></div>
+  <div class="duas" style="grid-template-columns: minmax(240px, 1fr) 2fr">
+    <div class="cartao">
+      <ul class="arvore">
+        {% for f in ficheiros %}
+        <li class="{{ 'sel' if f.caminho == caminho }}">{% if f.sensivel %}<span class="sens" title="Sensível: leitura negada">{{ icone('escudo', 14) }}</span>{{ f.caminho }}
+          {% else %}{{ icone('ficheiro', 14) }}<a href="/projetos/{{ proj.id }}?ficheiro={{ f.caminho|urlencode }}">{{ f.caminho }}</a>{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="cartao">
+      {% if aviso %}<div class="aviso espera" style="margin-top:0">{{ icone('alerta') }}<span>{{ aviso }}</span></div>
+      {% elif conteudo is not none %}<b style="font-family:var(--mono); font-size:13px">{{ caminho }}</b><pre style="max-height:520px">{{ conteudo }}</pre>
+      {% else %}<p class="vazio" style="margin:0">Escolha um ficheiro para ver o conteúdo.</p>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

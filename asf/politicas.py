@@ -3,16 +3,25 @@
 Ficam em politicas.json para poderem ser alteradas sem mexer no código
 (RNF17). O carregamento valida a configuração e rejeita-a se for inválida
 (UC19, fluxo alternativo 3A/4A).
+
+As regras são GLOBAIS (iguais para todos os projetos). Os caminhos usam
+marcadores {codigo}, {testes}, {docs}; para cada projeto, para_projeto()
+substitui-os pelas pastas desse projeto e junta os seus ficheiros sensíveis.
 """
 from __future__ import annotations
 
+import copy
 import fnmatch
 import json
+import re
 from pathlib import Path
 
 from .modelos import Confianca
 
 AGENTES_VALIDOS = {"AG1", "AG2", "AG3", "AG4", "AG5", "AG6"}
+CHAVES_CAMINHOS = ("caminhos_escrita_proposta", "caminhos_escrita_testes",
+                   "caminhos_leitura_codigo", "caminhos_leitura_docs")
+MARCADORES = {"codigo", "testes", "docs"}
 
 
 class ConfiguracaoInvalida(Exception):
@@ -39,8 +48,7 @@ class Politicas:
     @staticmethod
     def _validar(d: dict) -> None:
         erros = []
-        for chave in ("ferramentas", "matriz_permissoes", "fontes", "caminhos_escrita_proposta",
-                      "caminhos_leitura_codigo", "caminhos_leitura_docs"):
+        for chave in ("ferramentas", "matriz_permissoes", "fontes", *CHAVES_CAMINHOS):
             if chave not in d:
                 erros.append(f"falta a secção '{chave}'")
         if erros:
@@ -56,8 +64,28 @@ class Politicas:
         for r in d["fontes"]:
             if r.get("confianca") not in Confianca.__members__:
                 erros.append(f"fonte '{r.get('padrao')}': confiança inválida")
+        for chave in CHAVES_CAMINHOS:
+            for padrao in d[chave]:
+                for m in re.findall(r"\{(\w*)\}", padrao):
+                    if m not in MARCADORES:
+                        erros.append(f"{chave}: marcador desconhecido '{{{m}}}'")
+                if ".." in padrao or padrao.startswith("/"):
+                    erros.append(f"{chave}: caminho inválido '{padrao}'")
         if erros:
             raise ConfiguracaoInvalida("; ".join(erros))
+
+    def para_projeto(self, projeto) -> "Politicas":
+        """Cópia das políticas com os caminhos do projeto. Uma pasta vazia (ex.: projeto
+        sem docs) não gera padrão nenhum: fica tudo bloqueado nessa área."""
+        d = copy.deepcopy(self.dados)
+        pastas = {"codigo": projeto.pasta_codigo, "testes": projeto.pasta_testes, "docs": projeto.pasta_docs}
+        for chave in CHAVES_CAMINHOS:
+            d[chave] = [p.format(**pastas) for p in d[chave]
+                        if all(pastas[m] for m in re.findall(r"\{(\w+)\}", p))]
+        sensiveis = [{"padrao": f"repo:{c}", "confianca": "T1", "sensivel": True}
+                     for c in projeto.caminhos_sensiveis if c.strip()]
+        d["fontes"] = sensiveis + d["fontes"]          # primeira regra que casa ganha
+        return Politicas(d)
 
     def permitido(self, agente: str, ferramenta: str) -> bool:
         # RNF18 / RP11: o que não está explicitamente autorizado está bloqueado

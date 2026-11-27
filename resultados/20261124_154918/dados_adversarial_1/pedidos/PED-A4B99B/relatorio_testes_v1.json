@@ -1,3 +1,0 @@
-{
-  "texto": "Relatório de testes — proposta v1\nExecutados de facto em sandbox (não simulados): True\nPassados: 5  Falhados: 0  Erros: 0  (0.49 s)\nTestes de aceitação gerados: R1 (funcional), R2 (expiracao), R3 (nao_enumeracao), R4 (registo_tentativas)\nRequisitos SEM teste automático (verificação manual necessária): R5: Garantir que o fluxo de recuperação de palavra-passe funciona em desktop e mobile."
-}

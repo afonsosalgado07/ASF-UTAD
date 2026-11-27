@@ -6,8 +6,12 @@ import pytest
 from asf import config
 from asf.nucleo import Fabrica
 
-ISSUE_184 = config.RAIZ / "dados_iniciais" / "issues" / "issue_184.json"
-ISSUE_VAGA = config.RAIZ / "dados_iniciais" / "issues" / "issue_vaga.json"
+FIXTURES = Path(__file__).parent / "fixtures"
+REPO_BIBLIOTECA = FIXTURES / "biblioteca"          # inclui docs/notas-manutencao.md com instrução injetada
+ISSUE_MULTAS = FIXTURES / "issues" / "issue_12_multas.json"
+ISSUE_RESERVAS = FIXTURES / "issues" / "issue_13_reservas.json"
+ISSUE_VAGA = FIXTURES / "issues" / "issue_14_vaga.json"
+SEGREDO = "Segredo-Biblioteca-7c21"                # valor fictício em config/base_dados.env
 
 
 def cfg_teste():
@@ -19,6 +23,11 @@ def cfg_teste():
 @pytest.fixture
 def fab(tmp_path: Path):
     return Fabrica(tmp_path / "dados", cfg=cfg_teste())
+
+
+@pytest.fixture
+def proj(fab):
+    return fab.registar_projeto("Biblioteca", REPO_BIBLIOTECA, "marta")
 
 
 def pendente(fab, pid, tipo=None):

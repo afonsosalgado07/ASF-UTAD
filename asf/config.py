@@ -41,6 +41,9 @@ def carregar() -> dict:
                             "https://api.iaedu.pt/agent-chat//api/v1/agent/cmor5objoex9gfp01vm7p95jh/stream"),
             "api_key": get("IAEDU_API_KEY"),
             "channel_id": get("IAEDU_CHANNEL_ID"),
+            # Modo de espera (erros 429 / 503): intervalo mínimo entre chamadas e espera máxima total
+            "intervalo_min_s": float(get("LLM_INTERVALO_MIN_S", "2")),
+            "espera_max_s": float(get("LLM_ESPERA_MAX_S", "120")),
         },
         "limites": dict(LIMITES),
     }

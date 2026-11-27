@@ -53,7 +53,8 @@ class Bloco:
 
 class Comp1:
     def __init__(self, politicas: Politicas, store: Store, auditoria: Auditoria,
-                 redator: Redator, limites: dict):
+                 redator: Redator, limites: dict, projeto_id: str = ""):
+        self.projeto_id = projeto_id      # cada projeto tem o seu COMP1
         self.politicas = politicas
         self.store = store
         self.audit = auditoria
@@ -109,21 +110,29 @@ class Comp1:
             if not isinstance(args[nome], TIPOS[tipo]):
                 raise FerramentaBloqueada(f"argumento '{nome}' devia ser {tipo}")
 
-        # 2) âmbito: só o pedido em curso
+        # 2) âmbito: só o pedido em curso, e só se pertencer ao projeto deste COMP1
         if "pedido_id" in args and args["pedido_id"] != contexto:
             raise FerramentaBloqueada("fora do âmbito: só é permitido aceder ao pedido em curso")
+        pedido = self.store.obter_pedido(contexto) if contexto.startswith("PED-") else None
+        if pedido and self.projeto_id and pedido.projeto_id != self.projeto_id:
+            raise FerramentaBloqueada("fora do âmbito: o pedido pertence a outro projeto")
 
         # 3) caminhos
         if ferramenta in ("TL3", "TL4"):
             self._validar_caminho(args["caminho"],
                                   "caminhos_leitura_codigo" if ferramenta == "TL3" else "caminhos_leitura_docs")
-        if ferramenta == "TL6":
-            for caminho in args["ficheiros"]:
-                if ".." in caminho or not self.politicas.caminho_permitido(caminho, "caminhos_escrita_proposta"):
+        if ferramenta in ("TL6", "TL14"):
+            chave = "caminhos_escrita_proposta" if ferramenta == "TL6" else "caminhos_escrita_testes"
+            if not args["ficheiros"]:
+                raise FerramentaBloqueada("nenhum ficheiro indicado")
+            for caminho, conteudo in args["ficheiros"].items():
+                if (".." in caminho.split("/") or caminho.startswith("/") or "\\" in caminho
+                        or not self.politicas.caminho_permitido(caminho, chave)):
                     raise FerramentaBloqueada(f"escrita fora da área permitida: '{caminho}'")
-            for k, v in args["ficheiros"].items():
-                if not isinstance(v, str):
-                    raise FerramentaBloqueada(f"conteúdo de '{k}' tem de ser texto")
+                if self.politicas.classificar(f"repo:{caminho}")[1]:
+                    raise FerramentaBloqueada(f"'{caminho}' é um caminho sensível")
+                if not isinstance(conteudo, str):
+                    raise FerramentaBloqueada(f"conteúdo de '{caminho}' tem de ser texto")
 
     def _validar_caminho(self, caminho: str, chave: str) -> None:
         if ".." in caminho or caminho.startswith("/"):

@@ -1,6 +1,9 @@
 """Persistência em ficheiros JSON — uma pasta por pedido.
 
     dados/
+    ├── projetos/<id>/
+    │   ├── projeto.json         configuração do projeto (registada pelo Gestor)
+    │   └── repo/                repositório principal do projeto (só muda por ação humana)
     ├── pedidos/PED-XXXXXX/
     │   ├── pedido.json          estado, histórico, iteração
     │   ├── aprovacoes.json      pedidos de aprovação e decisões
@@ -11,7 +14,6 @@
     │   ├── testes_v1.json       artefacto do AG5
     │   ├── risco_v1.json        artefacto do AG6
     │   └── fontes.json          classificação de confiança das fontes usadas
-    ├── repo_principal/          cópia do repositório "principal" (só muda por ação humana)
     └── audit.jsonl              auditoria global append-only
 
 O resto do código nunca lê/escreve ficheiros diretamente: usa só esta classe.
@@ -24,7 +26,7 @@ import os
 import threading
 from pathlib import Path
 
-from .modelos import Pedido, PedidoAprovacao
+from .modelos import Pedido, PedidoAprovacao, Projeto
 
 
 class Store:
@@ -32,6 +34,8 @@ class Store:
         self.raiz = Path(raiz)
         self.pasta_pedidos = self.raiz / "pedidos"
         self.pasta_pedidos.mkdir(parents=True, exist_ok=True)
+        self.pasta_projetos = self.raiz / "projetos"
+        self.pasta_projetos.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
 
     # ---------------------------------------------------------- utilitários
@@ -50,6 +54,25 @@ class Store:
     def _pasta(self, pedido_id: str) -> Path:
         return self.pasta_pedidos / pedido_id
 
+    # -------------------------------------------------------------- projetos
+    def guardar_projeto(self, p: Projeto) -> None:
+        with self._lock:
+            self._escrever(self.pasta_projetos / p.id / "projeto.json", p.to_dict())
+
+    def obter_projeto(self, projeto_id: str) -> Projeto | None:
+        if not projeto_id or "/" in projeto_id or "\\" in projeto_id or projeto_id.startswith("."):
+            return None
+        with self._lock:
+            d = self._ler(self.pasta_projetos / projeto_id / "projeto.json")
+        return Projeto.from_dict(d) if d else None
+
+    def listar_projetos(self) -> list[Projeto]:
+        projetos = [self.obter_projeto(p.name) for p in self.pasta_projetos.iterdir() if p.is_dir()]
+        return sorted((p for p in projetos if p), key=lambda p: p.criado_em)
+
+    def pasta_repo(self, projeto_id: str) -> Path:
+        return self.pasta_projetos / projeto_id / "repo"
+
     # --------------------------------------------------------------- pedidos
     def guardar_pedido(self, p: Pedido) -> None:
         with self._lock:
@@ -60,11 +83,11 @@ class Store:
             d = self._ler(self._pasta(pedido_id) / "pedido.json")
         return Pedido.from_dict(d) if d else None
 
-    def listar_pedidos(self) -> list[Pedido]:
+    def listar_pedidos(self, projeto_id: str | None = None) -> list[Pedido]:
         pedidos = []
         for pasta in self.pasta_pedidos.iterdir():
             p = self.obter_pedido(pasta.name)
-            if p:
+            if p and (projeto_id is None or p.projeto_id == projeto_id):
                 pedidos.append(p)
         return sorted(pedidos, key=lambda p: p.criado_em, reverse=True)
 

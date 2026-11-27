@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% from "_icones.html" import icone, avatar %}
+{% block head %}
+<style>
+  .grelha { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .proj { background: var(--cartao); border-radius: 22px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .proj h3 { margin: 0; font-size: 16px; display: flex; gap: 8px; align-items: center; }
+  .proj p { margin: 0; color: var(--suave); font-size: 13px; }
+  .proj .rodape { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+  .ajuda { color: var(--suave); font-size: 12px; font-weight: 400; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 1000px) { .tres { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+{% block conteudo %}
+<h1>Projetos</h1>
+<p class="sub">Repositórios sobre os quais a fábrica trabalha. Cada projeto tem o seu repositório principal, que só muda por aprovação humana de Nível 2.</p>
+
+{% if erro %}<div class="aviso mau">{{ icone('alerta') }} <span>{{ erro }}</span></div>{% endif %}
+
+<div class="painel">
+  <div class="painel-topo"><h2>Projetos registados</h2><span class="pill cinza">{{ projetos|length }}</span></div>
+  {% if projetos %}
+  <div class="grelha">
+    {% for p in projetos %}
+    <a href="/projetos/{{ p.id }}" class="proj">
+      <h3>{{ icone('pasta', 18) }} {{ p.nome }}</h3>
+      <p>{{ p.descricao or 'Sem descrição.' }}</p>
+      <div class="rodape">
+        <span class="pill cinza">código {{ p.pasta_codigo }}/</span>
+        <span class="pill cinza">testes {{ p.pasta_testes }}/</span>
+        <span class="pill {{ 'curso' if contagem[p.id] else 'cinza' }}">{{ contagem[p.id] }} pedido(s)</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="cartao"><p class="vazio" style="margin:0">Ainda não há projetos. {% if papel == 'gestor' %}Adicione o primeiro abaixo.{% else %}Peça à Gestora de Projeto (Marta) para adicionar um.{% endif %}</p></div>
+  {% endif %}
+</div>
+
+<div class="painel">
+  <div class="painel-topo"><h2>Adicionar projeto</h2>{{ avatar('GP', 32) }}<span class="pill espera">só Gestor de Projeto</span></div>
+  {% if papel != 'gestor' %}
+  <div class="aviso espera">{{ icone('alerta') }} <span>Só um utilizador com papel <b>gestor</b> pode adicionar projetos. Troque para <b>Marta — Gestora de Projeto</b> no canto superior direito.</span></div>
+  {% else %}
+  <form method="post" action="/projetos" enctype="multipart/form-data" class="cartao">
+    <div class="duas" style="gap:16px">
+      <div>
+        <label class="campo">Nome do projeto</label>
+        <input type="text" name="nome" value="{{ form.nome }}" placeholder="Biblioteca Escolar">
+        <label class="campo">Descrição <span class="ajuda">(opcional)</span></label>
+        <input type="text" name="descricao" value="{{ form.descricao }}">
+        <label class="campo">Repositório (.zip) <span class="ajuda">— projeto Python com testes pytest</span></label>
+        <input type="file" name="ficheiro" accept=".zip">
+      </div>
+      <div>
+        <div class="tres">
+          <div><label class="campo">Pasta do código</label>
+            <input type="text" name="pasta_codigo" value="{{ form.pasta_codigo }}" placeholder="detetar">
+            <span class="ajuda">Único sítio onde o AG4 pode escrever. Vazio = deteta o pacote Python.</span></div>
+          <div><label class="campo">Pasta dos testes</label>
+            <input type="text" name="pasta_testes" value="{{ form.pasta_testes }}"></div>
+          <div><label class="campo">Pasta da documentação</label>
+            <input type="text" name="pasta_docs" value="{{ form.pasta_docs }}">
+            <span class="ajuda">Ignorada se não existir.</span></div>
+        </div>
+        <label class="campo">Caminhos sensíveis <span class="ajuda">(um padrão por linha; leitura sempre negada aos agentes, removidos da sandbox)</span></label>
+        <textarea name="sensiveis" rows="2">{{ form.sensiveis }}</textarea>
+        <label class="campo">Áreas críticas <span class="ajuda">(opcional; alterações aqui elevam o risco para "alto")</span></label>
+        <textarea name="criticas" rows="2" placeholder="biblioteca/emprestimos.py">{{ form.criticas }}</textarea>
+      </div>
+    </div>
+    <div class="botoes"><button type="submit" class="btn-preto">Adicionar projeto</button></div>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

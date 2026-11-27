@@ -6,22 +6,60 @@
   .numero { background: var(--cartao); border-radius: 22px; padding: 16px 20px; }
   .numero b { display: block; font-size: 30px; letter-spacing: -1px; }
   .numero span { color: var(--suave); font-size: 13px; }
+  .escolha { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .proj-cartao { background: var(--cartao); border-radius: 22px; padding: 18px 20px; }
+  .proj-cartao h3 { margin: 0 0 6px; font-size: 16px; display: flex; gap: 8px; align-items: center; }
+  .proj-cartao p { margin: 0 0 10px; color: var(--suave); font-size: 13px; }
 </style>
 {% endblock %}
 {% block conteudo %}
-<h1>Pedidos</h1>
-<p class="sub">Submeta uma Issue e acompanhe o trabalho dos agentes até à decisão humana.</p>
+{% if not projetos %}
+<h1>Issues</h1>
+<p class="sub">A fábrica trabalha sobre projetos. Cada Issue pertence a um único projeto.</p>
+<div class="painel" style="text-align:center; padding:48px 26px">
+  <div style="display:inline-flex; margin-bottom:10px">{{ icone('pasta', 40) }}</div>
+  <h2 style="margin:0 0 6px">Ainda não há projetos</h2>
+  <p class="vazio" style="margin:0 0 16px">Comece por importar um projeto (.zip de um repositório Python com testes).</p>
+  <a href="/projetos"><button type="button" class="btn-preto">{% if papel == 'gestor' %}Importar projeto{% else %}Ver projetos{% endif %}</button></a>
+  {% if papel != 'gestor' %}<p class="vazio" style="font-size:12px; margin-top:12px">Só a Gestora de Projeto (Marta) pode importar projetos.</p>{% endif %}
+</div>
+
+{% elif not projeto_ativo %}
+<h1>Escolha um projeto</h1>
+<p class="sub">As Issues são consultadas e submetidas no contexto de um projeto. Escolha o projeto com que vai trabalhar.</p>
+<div class="escolha">
+  {% for pr in projetos %}
+  <form method="post" action="/projeto-ativo" class="proj-cartao">
+    <input type="hidden" name="projeto" value="{{ pr.id }}">
+    <h3>{{ icone('pasta', 18) }} {{ pr.nome }}</h3>
+    <p>{{ pr.descricao or 'Sem descrição.' }}</p>
+    <div style="display:flex; gap:6px; flex-wrap:wrap"><span class="pill cinza">{{ pr.pasta_codigo }}/</span><span class="pill cinza">{{ contagem[pr.id] }} Issue(s)</span></div>
+    <button type="submit" class="btn-preto" style="margin-top:12px">Abrir projeto</button>
+  </form>
+  {% endfor %}
+</div>
+
+{% else %}
+<div style="display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap">
+  <div>
+    <h1>Issues — {{ projeto_ativo.nome }}</h1>
+    <p class="sub">Só as Issues deste projeto. Para trabalhar noutro projeto, troque no seletor do topo.</p>
+  </div>
+  <div style="margin-left:auto; display:flex; gap:8px">
+    <a href="/projetos/{{ projeto_ativo.id }}"><button type="button" class="btn-branco">Ver projeto</button></a>
+    <a href="/pedidos/novo"><button type="button" class="btn-preto">+ Nova Issue</button></a>
+  </div>
+</div>
 
 <div class="numeros">
   <div class="numero"><b style="color:var(--azul)">{{ resumo.curso }}</b><span>Em curso</span></div>
   <div class="numero"><b style="color:var(--laranja)">{{ resumo.espera }}</b><span>À espera de um humano</span></div>
-  <div class="numero"><b style="color:var(--verde)">{{ resumo.ok }}</b><span>Concluídos</span></div>
-  <div class="numero"><b style="color:var(--vermelho)">{{ resumo.mau }}</b><span>Rejeitados / interrompidos</span></div>
+  <div class="numero"><b style="color:var(--verde)">{{ resumo.ok }}</b><span>Concluídas</span></div>
+  <div class="numero"><b style="color:var(--vermelho)">{{ resumo.mau }}</b><span>Rejeitadas / interrompidas</span></div>
 </div>
 
 <div class="painel">
-  <div class="painel-topo"><h2>Histórico de pedidos</h2>
-    <div class="acoes"><a href="/pedidos/novo"><button type="button" class="btn-preto">+ Novo pedido</button></a></div></div>
+  <div class="painel-topo"><h2>Issues do projeto</h2><span class="pill cinza">{{ pedidos|length }}</span></div>
   <div class="cartao">
   {% if pedidos %}
   <table>
@@ -36,7 +74,8 @@
       <td><a href="/pedidos/{{ p.id }}" class="redondo" style="width:34px;height:34px">{{ icone('seta', 16) }}</a></td>
     </tr>{% endfor %}</tbody>
   </table>
-  {% else %}<p class="vazio" style="margin:0">Ainda não há pedidos. <a href="/pedidos/novo"><b>Criar o primeiro pedido →</b></a></p>{% endif %}
+  {% else %}<p class="vazio" style="margin:0">Este projeto ainda não tem Issues. <a href="/pedidos/novo"><b>Submeter a primeira →</b></a></p>{% endif %}
   </div>
 </div>
+{% endif %}
 {% endblock %}

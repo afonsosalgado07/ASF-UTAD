@@ -2,13 +2,14 @@
 {% from "_icones.html" import icone %}
 {% block conteudo %}
 <h1>Auditoria</h1>
-<p class="sub">Registo append-only: cada evento guarda o hash do anterior, por isso qualquer alteração é detetada.</p>
+<p class="sub">{% if projeto_ativo %}Execuções do projeto <b>{{ projeto_ativo.nome }}</b>. {% else %}Escolha um projeto no topo para reconstruir as suas execuções. {% endif %}Registo append-only: cada evento guarda o hash do anterior, por isso qualquer alteração é detetada.</p>
 <div class="aviso {{ 'ok' if integra else 'mau' }}">{{ icone('escudo') }}<span><b>{{ 'Cadeia íntegra' if integra else 'Cadeia quebrada' }}</b> — {{ msg_integridade }}</span></div>
 <div class="painel">
   <div class="painel-topo"><h2>Reconstruir uma execução</h2></div>
   <form method="get" action="/auditoria" style="display:flex; gap:10px; flex-wrap:wrap">
     <select name="correlacao" style="flex:1; min-width:280px; padding:10px 14px; border-radius:999px; border:1px solid #fff; background:#fff; font:inherit">
-      {% for p in pedidos %}<option value="{{ p.id }}" {% if p.id == correlacao %}selected{% endif %}>{{ p.id }} — {{ p.titulo }}</option>{% endfor %}
+      <optgroup label="Pedidos">{% for p in pedidos %}<option value="{{ p.id }}" {% if p.id == correlacao %}selected{% endif %}>{{ p.id }} — {{ p.titulo }} ({{ projetos_nomes.get(p.projeto_id, p.projeto_id) }})</option>{% endfor %}</optgroup>
+      {% if projeto_ativo %}<optgroup label="Projeto"><option value="PROJ:{{ projeto_ativo.id }}" {% if 'PROJ:' ~ projeto_ativo.id == correlacao %}selected{% endif %}>Registo do projeto {{ projeto_ativo.nome }}</option></optgroup>{% endif %}
     </select>
     <button class="btn-preto">Reconstruir</button>
   </form>

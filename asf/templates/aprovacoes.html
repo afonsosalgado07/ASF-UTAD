@@ -2,7 +2,7 @@
 {% from "_icones.html" import icone %}
 {% block conteudo %}
 <h1>Aprovações</h1>
-<p class="sub">A atuar como <b>{{ utilizadores[utilizador].nome }}</b>. Só humanos decidem: os agentes apenas criam os pedidos de aprovação.</p>
+<p class="sub">Projeto <b>{{ projeto_ativo.nome if projeto_ativo else '—' }}</b>. A atuar como <b>{{ utilizadores[utilizador].nome }}</b>. Só humanos decidem: os agentes apenas criam os pedidos de aprovação.</p>
 {% if erro %}<div class="aviso mau">{{ icone('alerta') }}<span><b>Decisão recusada:</b> {{ erro }}</span></div>{% endif %}
 {% for a in pendentes %}
   <p style="margin:6px 0 8px"><a href="/pedidos/{{ a.pedido_id }}"><span class="pill cinza">{{ a.pedido_id }}</span> <b>{{ pedidos[a.pedido_id].titulo }}</b></a></p>

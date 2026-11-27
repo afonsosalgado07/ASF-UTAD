@@ -8,7 +8,7 @@ from asf.config import RAIZ
 from asf.modelos import EstadoPedido as E
 from asf.nucleo import Fabrica
 from asf.politicas import ConfiguracaoInvalida, Politicas
-from conftest import ISSUE_184, cfg_teste
+from conftest import ISSUE_MULTAS, REPO_BIBLIOTECA, cfg_teste
 
 BASE = json.loads((RAIZ / "politicas.json").read_text(encoding="utf-8"))
 
@@ -25,6 +25,9 @@ def alterada(f):
     (lambda d: d["matriz_permissoes"]["AG2"].append("TL42"), "não catalogada"),
     (lambda d: d["fontes"].append({"padrao": "x:*", "confianca": "T9"}), "confiança inválida"),
     (lambda d: d["matriz_permissoes"]["AG1"].append("INTEGRAR"), "nível 2"),
+    (lambda d: d.pop("caminhos_escrita_testes"), "falta a secção"),
+    (lambda d: d["caminhos_escrita_proposta"].append("{raiz}/*"), "marcador desconhecido"),
+    (lambda d: d["caminhos_leitura_docs"].append("../*"), "caminho inválido"),
 ])
 def test_configuracao_invalida_e_rejeitada(mudanca, erro):
     with pytest.raises(ConfiguracaoInvalida, match=erro):
@@ -53,10 +56,19 @@ def test_ferramenta_nova_fica_bloqueada_por_defeito():
     assert not any(pol.permitido(a, "TL20") for a in pol.matriz)
 
 
+def test_caminhos_resolvidos_por_projeto(fab, proj):
+    d = fab.ambiente(proj).politicas.dados
+    assert d["caminhos_escrita_proposta"] == ["biblioteca/*"]
+    assert d["caminhos_escrita_testes"] == ["tests/test_aceitacao_*.py"]
+    assert d["fontes"][0] == {"padrao": "repo:config/*", "confianca": "T1", "sensivel": True}
+
+
 def test_retirar_permissao_muda_o_comportamento_sem_mudar_codigo(tmp_path):
     fab = Fabrica(tmp_path, cfg=cfg_teste())
-    fab.comp1.politicas = Politicas(alterada(lambda d: d["matriz_permissoes"]["AG2"].remove("TL4")))
-    pid = fab.submeter_ficheiro(ISSUE_184)
+    proj = fab.registar_projeto("Biblioteca", REPO_BIBLIOTECA, "marta")
+    amb = fab.ambiente(proj)
+    amb.comp1.politicas = Politicas(alterada(lambda d: d["matriz_permissoes"]["AG2"].remove("TL4"))).para_projeto(amb.projeto)
+    pid = fab.submeter_ficheiro(proj, ISSUE_MULTAS)
     fab.executar(pid)
     # o AG6 ainda lê a documentação, mas o AG2 deixa de poder: bloqueio registado e pedido parado com motivo
     assert fab.store.obter_pedido(pid).estado_enum == E.AGUARDA_INTERVENCAO

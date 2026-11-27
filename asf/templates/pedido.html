@@ -43,6 +43,7 @@
     <div class="meta">
       <span class="pill {{ ce }}">{{ p.estado }}</span>
       <span class="pill cinza">{{ p.id }}</span>
+      {% if proj %}<a href="/projetos/{{ proj.id }}" class="pill curso">projeto {{ proj.nome }}</a>{% endif %}
       <span class="pill cinza">fonte {{ p.fonte_id }}</span>
       <span class="pill cinza">autor {{ p.autor }}</span>
       <span class="pill cinza">prioridade {{ p.prioridade }}</span>
@@ -52,7 +53,15 @@
   <a href="/auditoria?correlacao={{ p.id }}" class="btn-branco" style="margin-left:auto; padding:10px 18px; border-radius:999px; background:#fff; display:inline-flex; gap:8px; align-items:center">{{ icone('escudo', 16) }} Reconstruir pela auditoria</a>
 </div>
 
+{% if outro_projeto %}
+<form method="post" action="/projeto-ativo" class="aviso espera" style="align-items:center">
+  {{ icone('alerta') }} <span>Esta Issue pertence ao projeto <b>{{ proj.nome if proj else p.projeto_id }}</b>, que não é o projeto ativo. Para decidir aprovações, selecione esse projeto.</span>
+  <input type="hidden" name="projeto" value="{{ p.projeto_id }}"><input type="hidden" name="voltar" value="/pedidos/{{ p.id }}">
+  <button type="submit" class="btn-preto" style="margin-left:auto">Selecionar projeto</button>
+</form>
+{% else %}
 {% for a in aprovacoes if a.estado == 'pendente' %}{% include "_aprovacao.html" %}{% endfor %}
+{% endif %}
 
 <div class="painel {{ 'a-correr' if a_correr }}">
   <div class="painel-topo">
@@ -95,11 +104,13 @@
     {% if requisitos %}
       <p style="margin:0 0 8px; font-size:13px"><b>Pedido:</b> {{ p.descricao }}</p>
       <table>
-        <thead><tr><th>Id</th><th>Requisito</th><th>Categoria</th><th>Origem</th></tr></thead>
+        <thead><tr><th>Id</th><th>Requisito</th><th>Categoria</th><th>Origem</th>{% if versoes and versoes[0].testes %}<th>Teste</th>{% endif %}</tr></thead>
         <tbody>{% for r in requisitos.aceites %}
         <tr><td><b>{{ r.id }}</b></td><td>{{ r.descricao }}<br><small class="vazio">“{{ r.evidencia }}”</small></td>
-            <td><span class="pill {{ 'cinza' if r.categoria in ['outro', 'multiplataforma'] else 'curso' }}">{{ r.categoria }}</span></td>
-            <td><code>{{ r.origem }}</code></td></tr>
+            <td><span class="pill {{ 'curso' if r.testavel is not sameas false else 'cinza' }}">{{ r.categoria }}</span></td>
+            <td><code>{{ r.origem }}</code></td>
+            {% if versoes and versoes[0].testes %}{% set pr = versoes[0].testes.por_requisito.get(r.id, {}) %}
+            <td><span class="pill {{ 'ok' if pr.estado == 'passou' else 'mau' if pr.estado == 'falhou' else 'cinza' }}">{{ pr.estado or '—' }}</span></td>{% endif %}</tr>
         {% else %}<tr><td colspan="4" class="vazio">Nenhum requisito aceite.</td></tr>{% endfor %}</tbody>
       </table>
       {% if requisitos.excluidos %}
@@ -129,6 +140,9 @@
           <div class="donut" style="background: conic-gradient(var(--azul) 0 {{ pct }}%, var(--vermelho) {{ pct }}% 100%)">
             <span><b>{{ v.testes.passados }}/{{ total }}</b><small class="vazio">testes</small></span></div>
           <div class="legenda"><span><i style="background:var(--azul)"></i>passados</span><span><i style="background:var(--vermelho)"></i>falhados/erros</span></div>
+          {% if v.testes.regressao %}<div class="legenda" style="margin-top:6px">
+            <span>regressão <b>{{ v.testes.regressao.passou }}/{{ v.testes.regressao.passou + v.testes.regressao.falhou + v.testes.regressao.erro }}</b></span>
+            <span>aceitação <b>{{ v.testes.aceitacao.passou }}/{{ v.testes.aceitacao.passou + v.testes.aceitacao.falhou + v.testes.aceitacao.erro }}</b></span></div>{% endif %}
         </div>
         <div>
           {% if v.risco %}
@@ -156,6 +170,31 @@
     </div>
   </div>
 </div>
+
+{% if testes_aceitacao %}
+<div class="painel">
+  <div class="painel-topo"><h2>Testes de aceitação</h2>{{ avatar('AG5', 32) }}
+    <span class="vazio" style="font-size:12px">escritos a partir dos requisitos e do contrato, antes e sem ver o código do AG4</span></div>
+  <div class="cartao">
+    <p style="margin-top:0; font-size:13px">Cobrem {% for r in testes_aceitacao.cobertura %}<span class="pill cinza">{{ r }}</span> {% endfor %}
+      · ficheiros {% for f in testes_aceitacao.ficheiros %}<code>{{ f }}</code> {% endfor %}</p>
+    {% if testes_aceitacao.sem_teste %}<div class="aviso espera">{{ icone('alerta') }}<span>Sem teste automático (indicado pelo AG5): {{ testes_aceitacao.sem_teste|join('; ') }}</span></div>{% endif %}
+    {% if linha_base %}
+    <div class="aviso {{ 'espera' if linha_base.aceitacao.passou else 'info' }}">{{ icone('relogio') }}<span><b>Linha de base</b> (código atual, sem a proposta):
+      {{ linha_base.aceitacao.passou }} teste(s) de aceitação passaram e {{ linha_base.aceitacao.falhou + linha_base.aceitacao.erro }} falharam (esperado: falharem);
+      regressão {{ linha_base.regressao.passou }} passados, {{ linha_base.regressao.falhou + linha_base.regressao.erro }} com falha.</span></div>
+    {% endif %}
+    {% if versoes and versoes[0].testes and versoes[0].testes.casos %}
+    <table style="margin-top:6px"><thead><tr><th>Teste</th><th>Requisito</th><th>Resultado (v{{ versoes[0].proposta.versao }})</th></tr></thead><tbody>
+      {% for c in versoes[0].testes.casos if c.grupo == 'aceitacao' %}
+      <tr><td><code>{{ c.nome }}</code>{% if c.detalhe %}<br><small class="vazio">{{ c.detalhe }}</small>{% endif %}</td><td>{{ c.requisito or '—' }}</td>
+        <td><span class="pill {{ 'ok' if c.resultado == 'passou' else 'cinza' if c.resultado == 'ignorado' else 'mau' }}">{{ c.resultado }}</span></td></tr>
+      {% endfor %}</tbody></table>
+    {% endif %}
+    <details><summary>Ver código dos testes</summary>{% for f, codigo in testes_aceitacao.ficheiros.items() %}<b style="font-size:12px">{{ f }}</b><pre>{{ codigo }}</pre>{% endfor %}</details>
+  </div>
+</div>
+{% endif %}
 
 {% for v in versoes %}
 <div class="painel">
@@ -189,6 +228,7 @@
     <div class="cartao" style="font-size:13px">
       <p style="margin-top:0"><b>Componentes:</b> {{ impacto.componentes_afetados|join(', ') }}</p>
       <p><b>Ficheiros lidos:</b> {% for f in impacto.ficheiros_relevantes %}<code>{{ f }}</code> {% endfor %}</p>
+      {% if impacto.contrato %}<p style="margin-bottom:4px"><b>Contrato da alteração</b> <span class="vazio">(o AG4 implementa, o AG5 testa)</span></p><pre style="margin-top:0">{{ impacto.contrato }}</pre>{% endif %}
       <p style="margin-bottom:4px"><b>Riscos</b></p><ul style="margin-top:0">{% for r in impacto.riscos %}<li>{{ r }}</li>{% endfor %}</ul>
       {% if impacto.incertezas %}<p style="margin-bottom:0"><b>Incertezas:</b> {{ impacto.incertezas|join(' ') }}</p>{% endif %}
     </div>

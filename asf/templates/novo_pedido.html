@@ -2,30 +2,26 @@
 {% from "_icones.html" import icone %}
 {% block head %}
 <style>
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-  .tile { border-radius: 22px; padding: 18px 20px; text-align: left; min-height: 96px; display: flex; flex-direction: column;
-          justify-content: space-between; border: 1px solid #fff; background: var(--cartao); color: var(--texto); }
-  .tile.escuro { background: #111; color: #fff; }
-  .tile small { opacity: .65; font-weight: 400; }
   .opcoes label { display: flex; gap: 8px; align-items: center; margin: 6px 0; }
-  select.campo-sel { border: 1px solid #fff; background: rgba(255,255,255,.9); border-radius: 14px; padding: 10px 14px; font: inherit; outline: none; }
 </style>
 {% endblock %}
 {% block conteudo %}
-<h1>Novo pedido</h1>
-<p class="sub">Submeta uma Issue. O pedido entra no fluxo dos agentes e para sempre que for precisa uma decisão humana.</p>
+<h1>Nova Issue — {{ projeto_ativo.nome }}</h1>
+<p class="sub">Submeta uma Issue sobre um projeto. O pedido entra no fluxo dos agentes e para sempre que for precisa uma decisão humana.</p>
 
 {% if erro %}<div class="aviso mau">{{ icone('alerta') }} <span>{{ erro }}</span></div>{% endif %}
+{% if true %}
 {% if papel != 'autor' %}
 <div class="aviso info">{{ icone('alerta') }} <span>Está a submeter como <b>{{ utilizadores[utilizador].nome }}</b>. Normalmente os pedidos são submetidos pela autora da Issue (Ana).</span></div>
 {% endif %}
 
-<form method="post" action="/pedidos">
+<form method="post" action="/pedidos" enctype="multipart/form-data">
+<div class="aviso info">{{ icone('pasta') }} <span>A Issue fica associada ao projeto ativo: <b>{{ projeto_ativo.nome }}</b> (<code>{{ projeto_ativo.pasta_codigo }}/</code>). Para outro projeto, troque no seletor do topo.</span></div>
 <div class="duas">
   <div class="painel">
     <div class="painel-topo"><h2>Escrever um pedido</h2></div>
     <label class="campo">Título</label>
-    <input type="text" name="titulo" value="{{ form.titulo }}" placeholder="ISSUE #201 — …">
+    <input type="text" name="titulo" value="{{ form.titulo }}" placeholder="ISSUE #12 — …">
     <label class="campo">Descrição</label>
     <textarea name="descricao" rows="4" placeholder="Como …, quero …, para …">{{ form.descricao }}</textarea>
     <label class="campo">Critérios de aceitação <span class="vazio" style="font-weight:400">(um por linha)</span></label>
@@ -40,21 +36,19 @@
 
   <div>
     <div class="painel">
-      <div class="painel-topo"><h2>Ou usar uma Issue de exemplo</h2></div>
-      <div class="tiles">
-        <button class="tile escuro" name="exemplo" value="issue_184">
-          <span>Issue #184 — Password Reset</span><small>Exemplo do protocolo (Anexo A)</small></button>
-        <button class="tile" name="exemplo" value="issue_vaga">
-          <span>Issue #190 — Pedido vago</span><small>Demonstra o pedido de clarificação</small></button>
-      </div>
+      <div class="painel-topo"><h2>Ou carregar uma Issue (.json)</h2></div>
+      <p class="vazio" style="font-size:13px; margin-top:0">Formato: <code>{"fonte_id": "issue:12", "titulo": "…", "descricao": "…", "criterios": ["…"], "prioridade": "Must"}</code>. Se escolher um ficheiro, os campos ao lado são ignorados.</p>
+      <input type="file" name="issue_json" accept=".json">
+      <div class="botoes"><button type="submit" class="btn-preto">Submeter Issue do ficheiro</button></div>
     </div>
     <div class="painel opcoes">
       <div class="painel-topo"><h2>Opções de demonstração</h2></div>
-      <span class="vazio" style="font-size:12px">Aplicam-se ao pedido escrito e aos exemplos, e ficam registadas na auditoria.</span>
+      <span class="vazio" style="font-size:12px">Ficam registadas na auditoria.</span>
       {% if llm == 'simulado' %}<label><input type="checkbox" name="llm_manipulado" {% if form.llm_manipulado %}checked{% endif %}> LLM simulado manipulado (obedece a instruções injetadas)</label>{% endif %}
-      <label><input type="checkbox" name="falha_smtp" {% if form.falha_smtp %}checked{% endif %}> Serviço SMTP indisponível (cenário de falha)</label>
+      <label><input type="checkbox" name="falha_servico" {% if form.falha_servico %}checked{% endif %}> Serviço externo indisponível (cenário de falha na TL5)</label>
     </div>
   </div>
 </div>
 </form>
+{% endif %}
 {% endblock %}

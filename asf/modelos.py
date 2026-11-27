@@ -1,4 +1,4 @@
-"""Entidades do domínio: Pedido e PedidoAprovacao.
+"""Entidades do domínio: Projeto, Pedido e PedidoAprovacao.
 
 As transições de estado permitidas estão numa tabela explícita, para
 corresponderem 1:1 ao Diagrama de Estados do Pedido. Uma transição que não
@@ -34,6 +34,33 @@ class Confianca(IntEnum):
 
 class TransicaoInvalida(Exception):
     pass
+
+
+# --------------------------------------------------------------------------
+# Projeto — repositório de software sobre o qual a fábrica trabalha.
+# Registado por um Gestor de Projeto (T3); a configuração (pastas, ficheiros
+# sensíveis) é decisão humana e não vem do conteúdo do repositório (T1).
+# --------------------------------------------------------------------------
+@dataclass
+class Projeto:
+    id: str
+    nome: str
+    descricao: str
+    pasta_codigo: str                 # onde o AG4 pode propor alterações (ex.: "biblioteca")
+    pasta_testes: str = "tests"       # testes existentes (regressão) e testes de aceitação do AG5
+    pasta_docs: str = "docs"          # documentação (contexto, T1); "" se não existir
+    caminhos_sensiveis: list = field(default_factory=lambda: ["config/*"])   # leitura sempre negada
+    areas_criticas: list = field(default_factory=list)   # alterações aqui elevam o risco para "alto"
+    origem: str = ""                  # nome do .zip ou pasta de onde foi importado
+    criado_por: str = ""
+    criado_em: str = field(default_factory=agora)
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, d: dict) -> "Projeto":
+        return cls(**d)
 
 
 # --------------------------------------------------------------------------
@@ -86,13 +113,14 @@ class Pedido:
     descricao: str
     criterios: list[str]
     autor: str
-    fonte_id: str                     # ex.: "issue:184" -> classificada pelo COMP1
+    fonte_id: str                     # ex.: "issue:12" -> classificada pelo COMP1
+    projeto_id: str = ""              # projeto a que o pedido se aplica
     prioridade: str = "Must"
     estado: str = P.RECEBIDO.value
     iteracao: int = 0                 # n.º da proposta atual (proposta_vN)
     iteracoes_ciclo: int = 0          # iterações desde a última decisão humana (RNF10: máx. 3)
     retomar_em: str = ""              # estado para onde voltar após intervenção humana
-    cenario: dict = field(default_factory=dict)   # opções de demonstração (ex.: falha SMTP)
+    cenario: dict = field(default_factory=dict)   # opções de demonstração (ex.: falha de serviço)
     historico: list = field(default_factory=list) # [momento, de, para, motivo]
     criado_em: str = field(default_factory=agora)
 
@@ -116,7 +144,7 @@ class Pedido:
 
     @classmethod
     def from_dict(cls, d: dict) -> "Pedido":
-        return cls(**d)
+        return cls(**{k: v for k, v in d.items() if k in cls.__dataclass_fields__})
 
 
 # --------------------------------------------------------------------------
@@ -165,7 +193,7 @@ PAPEL_DECISOR = {
     TipoAprovacao.CLARIFICACAO: "autor",
     TipoAprovacao.VALIDAR_REQUISITOS: "revisor",
     TipoAprovacao.INTEGRAR_PROPOSTA: "revisor",
-    TipoAprovacao.INTERVENCAO: "revisor",
+    TipoAprovacao.INTERVENCAO: "gestor",        # D2: o Gestor de Projeto decide retomar/interromper
 }
 
 

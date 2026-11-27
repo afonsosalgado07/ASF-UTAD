@@ -19,24 +19,13 @@ from .comp1 import FalhaFerramenta, FerramentaBloqueada
 from .llm import FalhaLLM
 from .modelos import ESTADOS_EM_ESPERA, ESTADOS_FINAIS, EstadoPedido as E, Pedido, transitar_proposta
 
-INTERFACE = """Interface esperada (contrato para AG4 e AG5):
-Ficheiro auth/password_reset.py com:
-- VALIDADE_MINUTOS: int
-- REGISTO_TENTATIVAS: list[dict]   (todas as tentativas, com 'momento')
-- pedir_reposicao(email: str, agora: datetime | None = None) -> str
-    devolve SEMPRE a mesma mensagem pública; se o e-mail existir envia, via
-    auth.email_service.enviar_email(destino, assunto, corpo), um link com 'token=<TOKEN>'
-- confirmar_reposicao(token: str, nova_password: str, agora: datetime | None = None) -> bool
-    True e altera a password (auth.users.definir_password) só se o token for válido,
-    não usado e não expirado."""
-
-
 class Orquestrador:
     id = "AG1"
 
-    def __init__(self, store, comp1, auditoria, llm, limites):
+    def __init__(self, store, comp1, auditoria, llm, limites, projeto):
         self.store, self.comp1, self.audit, self.limites = store, comp1, auditoria, limites
-        args = (comp1, llm, auditoria, limites)
+        self.projeto = projeto
+        args = (comp1, llm, auditoria, limites, projeto)
         self.ag2, self.ag3, self.ag4 = AgenteRequisitos(*args), AgenteArquitetura(*args), AgenteDesenvolvimento(*args)
         self.ag5, self.ag6 = AgenteTestes(*args), AgenteSeguranca(*args)
         self.passos = {
@@ -109,30 +98,40 @@ class Orquestrador:
         req = self.store.obter_artefacto(p.id, "requisitos")
         plano = {
             "versao": 1,
+            "projeto": self.projeto.id,
             "tarefas": [
-                {"id": "T1", "descricao": "Analisar impacto e dependências", "responsavel": "AG3",
-                 "depende_de": [], "criterio": "componentes e ficheiros identificados"},
-                {"id": "T2", "descricao": "Produzir proposta em área isolada", "responsavel": "AG4",
-                 "depende_de": ["T1"], "criterio": "proposta referencia requisitos aceites"},
-                {"id": "T3", "descricao": "Executar testes de aceitação em sandbox", "responsavel": "AG5",
-                 "depende_de": ["T2"], "criterio": "0 falhas e 0 erros"},
-                {"id": "T4", "descricao": "Classificar risco da proposta", "responsavel": "AG6",
-                 "depende_de": ["T3"], "criterio": "risco justificado e não bloqueante"},
-                {"id": "T5", "descricao": "Aprovar integração (Nível 2)", "responsavel": "Revisor Humano",
-                 "depende_de": ["T4"], "criterio": "decisão registada"},
+                {"id": "T1", "descricao": "Analisar impacto e definir o contrato da alteração", "responsavel": "AG3",
+                 "depende_de": [], "criterio": "componentes, ficheiros e contrato identificados"},
+                {"id": "T2", "descricao": "Escrever testes de aceitação a partir dos requisitos e do contrato",
+                 "responsavel": "AG5", "depende_de": ["T1"],
+                 "criterio": "cada requisito testável tem pelo menos um teste; testes falham sem a alteração"},
+                {"id": "T3", "descricao": f"Produzir proposta em área isolada ({self.projeto.pasta_codigo}/)",
+                 "responsavel": "AG4", "depende_de": ["T1"], "criterio": "proposta referencia requisitos aceites"},
+                {"id": "T4", "descricao": "Executar regressão + aceitação em sandbox", "responsavel": "AG5",
+                 "depende_de": ["T2", "T3"], "criterio": "0 falhas e 0 erros"},
+                {"id": "T5", "descricao": "Classificar risco da proposta", "responsavel": "AG6",
+                 "depende_de": ["T4"], "criterio": "risco justificado e não bloqueante"},
+                {"id": "T6", "descricao": "Aprovar integração (Nível 2)", "responsavel": "Revisor Humano",
+                 "depende_de": ["T5"], "criterio": "decisão registada"},
             ],
-            "riscos": ["Alteração ao módulo de autenticação (segurança)."]
+            "notas": "T2 e T3 são independentes (podem correr em paralelo); o protótipo executa-as em sequência.",
+            "riscos": [f"Alteração ao projeto '{self.projeto.nome}' ({self.projeto.pasta_codigo}/)."]
+                      + [f"Área crítica definida pelo gestor: {a}" for a in self.projeto.areas_criticas]
                       + [f"Fonte com confiança reduzida: {s['fonte']}" for s in req["fontes_suspeitas"]],
             "pressupostos": [a["pressuposto"] for a in req["ambiguidades"] if a.get("pressuposto")],
-            "interface": INTERFACE,
         }
         self.store.guardar_artefacto(p.id, "plano", plano)
         self._mudar(p, E.EM_ANALISE_IMPACTO, "plano criado")
 
     def _impacto(self, p: Pedido):
-        impacto = self.ag3.executar(p)
+        impacto = self.ag3.executar(p)                       # T1
         self.store.guardar_artefacto(p.id, "impacto", impacto)
-        self._mudar(p, E.EM_DESENVOLVIMENTO, f"{len(impacto['ficheiros_relevantes'])} ficheiro(s) relevantes")
+        testes = self.ag5.gerar_testes(p, impacto)           # T2 (antes e sem ver o código do AG4)
+        self.audit.registar(p.id, "testes_aceitacao_escritos", "AG5",
+                            f"testes para {', '.join(testes['cobertos'])}; na linha de base passaram "
+                            f"{testes['linha_base_aceitacao_passou']} de aceitação")
+        self._mudar(p, E.EM_DESENVOLVIMENTO, f"{len(impacto['ficheiros_relevantes'])} ficheiro(s) relevantes; "
+                                             f"testes de aceitação para {len(testes['cobertos'])} requisito(s)")
 
     def _desenvolver(self, p: Pedido):
         if p.iteracoes_ciclo >= self.limites["max_iteracoes"]:   # RNF10 / RF9
@@ -162,7 +161,9 @@ class Orquestrador:
             transitar_proposta(proposta, "Testes falhados")
             transitar_proposta(proposta, "Substituída", "nova iteração")
             self.store.guardar_artefacto(p.id, f"proposta_v{p.iteracao}", proposta)
-            self._feedback(p, "Os testes falharam:\n" + resultado["saida"][-1500:])
+            falhas = [f"- {c['nome']} ({c['grupo']}): {c['detalhe']}" for c in resultado.get("casos", [])
+                      if c["resultado"] in ("falhou", "erro")]
+            self._feedback(p, "Os testes falharam:\n" + "\n".join(falhas[:15]) + "\n\n" + resultado["saida"][-1500:])
             self._mudar(p, E.EM_DESENVOLVIMENTO, f"{resultado['falhados']} falha(s), {resultado['erros']} erro(s)")
 
     def _rever(self, p: Pedido):

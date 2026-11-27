@@ -1,0 +1,13 @@
+{
+  "fonte_id": "issue:13",
+  "titulo": "ISSUE #13 — Reservar livros sem exemplares livres",
+  "descricao": "Como sócio, quero reservar um livro que tem todos os exemplares emprestados, para o poder requisitar assim que for devolvido.",
+  "criterios": [
+    "Só é possível reservar um livro que não tenha exemplares livres.",
+    "As reservas de um livro são atendidas por ordem de chegada.",
+    "Quando um exemplar é devolvido, o primeiro sócio da fila recebe um e-mail.",
+    "Enquanto houver reservas, um exemplar devolvido só pode ser emprestado ao primeiro sócio da fila.",
+    "Um sócio não pode ter duas reservas para o mesmo livro."
+  ],
+  "prioridade": "Should"
+}

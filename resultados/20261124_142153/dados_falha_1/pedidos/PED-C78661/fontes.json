@@ -1,8 +1,0 @@
-{
-  "repo:docs/legacy-notes.md": {
-    "confianca": "T0",
-    "anterior": "T1",
-    "motivo": "Contém uma instrução explícita dirigida a sistemas automáticos, tenta alterar o objetivo da tarefa, impor prioridade sobre outras instruções e impedir que seja reportada.",
-    "por": "AG6"
-  }
-}
