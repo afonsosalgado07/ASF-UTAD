@@ -10,6 +10,7 @@ Cada agente:
 from __future__ import annotations
 
 import json
+import re
 
 from .comp1 import Bloco, FerramentaBloqueada, montar_prompt
 from .llm import FalhaLLM, extrair_json
@@ -31,16 +32,19 @@ class Agente:
         return self.comp1.bloco(contexto, r["fonte_id"], r["conteudo"])
 
     def perguntar_llm(self, pedido: Pedido, tarefa: str, instrucoes: str, blocos: list[Bloco],
-                      formato: str, validar) -> dict:
+                      formato: str, validar, parser=extrair_json, prompt_formato: str | None = None) -> dict:
         """Chama o LLM com tentativas limitadas (RF23). Resposta inválida = falha."""
-        prompt = montar_prompt(instrucoes, blocos, formato)
+        prompt = montar_prompt(instrucoes, blocos, formato, prompt_formato)
         opcoes = {"tarefa": tarefa, "manipulado": pedido.cenario.get("llm_manipulado", False)}
         tentativas = 1 + self.limites["tentativas_extra"]
         erro = ""
         for n in range(1, tentativas + 1):
             try:
+                self.audit.registar(pedido.id, "pedido_llm", self.id,
+                                    f"{tarefa}: a aguardar resposta do LLM ({self.llm.nome})"
+                                    + (f", tentativa {n}" if n > 1 else ""))
                 texto = self.llm.completar(self.id, prompt, opcoes)
-                dados = extrair_json(texto)
+                dados = parser(texto)
                 validar(dados)
                 self.audit.registar(pedido.id, "chamada_llm", self.id,
                                     f"{tarefa}: resposta válida" + (f" (tentativa {n})" if n > 1 else ""),
@@ -50,6 +54,21 @@ class Agente:
                 erro = str(e)
                 self.audit.registar(pedido.id, "falha_llm", self.id, f"{tarefa} tentativa {n}/{tentativas}: {erro}")
         raise FalhaLLM(f"{self.id}/{tarefa}: {erro}")
+
+
+def ler_proposta(texto: str) -> dict:
+    """Aceita o formato FICHEIRO/```python``` (pedido ao LLM real) ou JSON (LLM simulado).
+    O formato com blocos é lido primeiro: o código pode conter '{' que enganaria o leitor de JSON."""
+    ficheiros = {}
+    for m in re.finditer(r"FICHEIRO:\s*`?([\w./-]+)`?\s*\n```[a-zA-Z]*\n(.*?)\n```", texto, re.S):
+        ficheiros[m.group(1).strip()] = m.group(2) + "\n"
+    if not ficheiros:
+        return extrair_json(texto)
+    reqs = re.search(r"REQUISITOS:\s*(.+)", texto)
+    just = re.search(r"JUSTIFICACAO:\s*(.+)", texto)
+    return {"ficheiros": ficheiros,
+            "requisitos_ref": re.findall(r"R\d+", reqs.group(1)) if reqs else [],
+            "justificacao": just.group(1).strip() if just else ""}
 
 
 def _exigir(cond: bool, msg: str):
@@ -148,7 +167,13 @@ class AgenteDesenvolvimento(Agente):
         "endpoint legado. Responde com o conteúdo COMPLETO de cada ficheiro novo/alterado e com os "
         "ids dos requisitos implementados. Se existir feedback de uma iteração anterior, corrige-o."
     )
-    FORMATO = '{"ficheiros": {"auth/exemplo.py": "<código completo>"}, "justificacao": "...", "requisitos_ref": ["R1"]}'
+    FORMATO = (
+        "Responde EXATAMENTE neste formato (sem JSON), repetindo o bloco FICHEIRO para cada ficheiro:\n"
+        "FICHEIRO: auth/nome_do_ficheiro.py\n"
+        "```python\n<código completo do ficheiro>\n```\n"
+        "REQUISITOS: R1, R2, R3\n"
+        "JUSTIFICACAO: <uma ou duas frases>"
+    )
 
     def executar(self, pedido: Pedido, plano: dict, impacto: dict, feedback: str) -> int:
         requisitos = self.ferramenta("TL2", pedido.id, pedido_id=pedido.id)
@@ -164,7 +189,8 @@ class AgenteDesenvolvimento(Agente):
             _exigir(isinstance(d.get("requisitos_ref"), list), "falta 'requisitos_ref'")
             d.setdefault("justificacao", "")
 
-        r = self.perguntar_llm(pedido, "proposta", self.INSTRUCOES, blocos, self.FORMATO, validar)
+        r = self.perguntar_llm(pedido, "proposta", self.INSTRUCOES, blocos, self.FORMATO, validar,
+                               parser=ler_proposta, prompt_formato=self.FORMATO)
         return self.ferramenta("TL6", pedido.id, pedido_id=pedido.id, ficheiros=r["ficheiros"],
                                justificacao=str(r["justificacao"]), requisitos_ref=r["requisitos_ref"])
 

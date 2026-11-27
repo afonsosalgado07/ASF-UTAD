@@ -30,6 +30,8 @@ class Politicas:
     def carregar(cls, ficheiro: Path) -> "Politicas":
         try:
             dados = json.loads(Path(ficheiro).read_text(encoding="utf-8"))
+        except UnicodeDecodeError as e:   # ex.: guardado em ANSI no Bloco de Notas do Windows
+            raise ConfiguracaoInvalida(f"{ficheiro} não está em UTF-8 (guarde-o com codificação UTF-8): {e}") from e
         except (OSError, json.JSONDecodeError) as e:
             raise ConfiguracaoInvalida(f"Não foi possível ler {ficheiro}: {e}") from e
         return cls(dados)

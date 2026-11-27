@@ -28,3 +28,12 @@ def test_parafrase_ligeira_da_issue_e_aceite(fab):
          "evidencia": "todas as tentativas devem ser registadas"}
     aceites, _ = fab.comp1.validar_proveniencia(p, [r])
     assert aceites
+
+
+def test_requisito_vindo_do_comentario_do_revisor_e_aceite(fab):
+    pid = fab.submeter_ficheiro(ISSUE_184)
+    fab.store.guardar_artefacto(pid, "feedback_requisitos", {"texto": "O link deve ser de uso único."})
+    p = fab.store.obter_pedido(pid)
+    r = {"id": "R9", "descricao": "Uso único", "origem": "humano:revisor", "evidencia": "O link deve ser de uso único."}
+    aceites, excluidos = fab.comp1.validar_proveniencia(p, [r])
+    assert aceites and not excluidos
