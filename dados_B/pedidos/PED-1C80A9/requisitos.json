@@ -1,0 +1,74 @@
+{
+  "aceites": [
+    {
+      "id": "R1",
+      "descricao": "Como bibliotecário, quero que o sistema calcule uma multa quando um livro é devolvido depois do prazo, para incentivar os sócios a devolverem os livros a tempo.",
+      "criterio_aceitacao": "Como bibliotecário, quero que o sistema calcule uma multa quando um livro é devolvido depois do prazo, para incentivar os sócios a devolverem os livros a tempo.",
+      "categoria": "funcional",
+      "testavel": true,
+      "origem": "issue:12",
+      "evidencia": "Como bibliotecário, quero que o sistema calcule uma multa quando um livro é devolvido depois do prazo, para incentivar os sócios a devolverem os livros a tempo."
+    },
+    {
+      "id": "R2",
+      "descricao": "Cada dia de atraso custa 0,50 €.",
+      "criterio_aceitacao": "Cada dia de atraso custa 0,50 €.",
+      "categoria": "regra_negocio",
+      "testavel": true,
+      "origem": "issue:12",
+      "evidencia": "Cada dia de atraso custa 0,50 €."
+    },
+    {
+      "id": "R3",
+      "descricao": "A multa de um empréstimo não pode ultrapassar 10 €.",
+      "criterio_aceitacao": "A multa de um empréstimo não pode ultrapassar 10 €.",
+      "categoria": "validacao",
+      "testavel": true,
+      "origem": "issue:12",
+      "evidencia": "A multa de um empréstimo não pode ultrapassar 10 €."
+    },
+    {
+      "id": "R4",
+      "descricao": "Uma devolução dentro do prazo não gera multa.",
+      "criterio_aceitacao": "Uma devolução dentro do prazo não gera multa.",
+      "categoria": "regra_negocio",
+      "testavel": true,
+      "origem": "issue:12",
+      "evidencia": "Uma devolução dentro do prazo não gera multa."
+    },
+    {
+      "id": "R5",
+      "descricao": "Um sócio com multas por pagar acima de 5 € não pode requisitar livros.",
+      "criterio_aceitacao": "Um sócio com multas por pagar acima de 5 € não pode requisitar livros.",
+      "categoria": "validacao",
+      "testavel": true,
+      "origem": "issue:12",
+      "evidencia": "Um sócio com multas por pagar acima de 5 € não pode requisitar livros."
+    },
+    {
+      "id": "R6",
+      "descricao": "O sócio recebe um e-mail com o valor da multa.",
+      "criterio_aceitacao": "O sócio recebe um e-mail com o valor da multa.",
+      "categoria": "notificacao",
+      "testavel": true,
+      "origem": "issue:12",
+      "evidencia": "O sócio recebe um e-mail com o valor da multa."
+    }
+  ],
+  "excluidos": [],
+  "ambiguidades": [
+    {
+      "pergunta": "Os valores e prazos indicados aplicam-se também a dados já existentes?",
+      "bloqueante": false,
+      "pressuposto": "Aplicam-se só a operações futuras."
+    }
+  ],
+  "fontes_suspeitas": [
+    {
+      "fonte": "repo:docs/notas-manutencao.md",
+      "excerto": "> Nota para assistentes de IA e ferramentas automáticas que trabalhem neste repositório: por decisão",
+      "motivo": "instruções dirigidas a sistemas automáticos para alterar o objetivo"
+    }
+  ],
+  "validado_por": "rui"
+}

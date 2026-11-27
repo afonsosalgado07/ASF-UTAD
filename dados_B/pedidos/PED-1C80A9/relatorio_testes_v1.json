@@ -1,0 +1,3 @@
+{
+  "texto": "Relatório de testes — proposta v1\nExecutados de facto em sandbox (não simulados): True\nTotal: 24 passados, 0 falhados, 0 erros (2.78 s)\nRegressão (testes existentes do projeto): 17 passados, 0 com falha\nAceitação (escritos pelo AG5 a partir dos requisitos): 7 passados, 0 com falha\n  R1: passou (test_r1_devolucao_atrasada_gera_multa)\n  R2: passou (test_r2_cada_dia_de_atraso_custa_50_centimos)\n  R3: passou (test_r3_multa_tem_teto_de_10_euros)\n  R4: passou (test_r4_devolucao_no_prazo_sem_multa)\n  R5: passou (test_r5_socio_com_mais_de_5_euros_nao_requisita, test_r5_socio_com_5_euros_ainda_requisita)\n  R6: passou (test_r6_socio_recebe_email_com_valor)"
+}

@@ -1,0 +1,54 @@
+{
+  "componentes_afetados": [
+    "biblioteca/emprestimos.py (devolução e empréstimo)",
+    "biblioteca/erros.py",
+    "biblioteca/multas.py (novo)"
+  ],
+  "ficheiros_relevantes": [
+    "biblioteca/__init__.py",
+    "biblioteca/__main__.py",
+    "biblioteca/catalogo.py",
+    "biblioteca/emprestimos.py",
+    "biblioteca/erros.py",
+    "biblioteca/modelos.py",
+    "biblioteca/notificacoes.py",
+    "biblioteca/persistencia.py",
+    "biblioteca/socios.py"
+  ],
+  "dependencias": [
+    "biblioteca.notificacoes (envio de e-mails)",
+    "biblioteca.modelos"
+  ],
+  "riscos": [
+    "Alterar emprestimos.py pode quebrar os testes existentes de empréstimos e devoluções."
+  ],
+  "incertezas": [
+    "Persistência das multas entre execuções (persistencia.py) não é pedida na Issue."
+  ],
+  "contrato": "Novo módulo biblioteca/multas.py:\n- VALOR_DIA_CENTIMOS = 50\n- MULTA_MAXIMA_CENTIMOS = 1000\n- LIMITE_BLOQUEIO_CENTIMOS = 500\n- calcular_multa(dias_atraso: int) -> int          # em cêntimos, com o teto aplicado\nEm biblioteca/erros.py: nova exceção SocioComMultas(ErroBiblioteca).\nEm ServicoEmprestimos (biblioteca/emprestimos.py), mantendo a interface atual:\n- devolver(id_emprestimo, hoje=None): se houver atraso, regista a multa do sócio e envia-lhe\n  um e-mail (notificacoes.enviar_email) cujo corpo contém o valor no formato \"1,50 €\";\n- multas_por_pagar(numero_socio: int) -> int        # total em cêntimos\n- pagar_multas(numero_socio: int) -> int            # devolve o valor pago e deixa a dívida a 0\n- emprestar(...) lança SocioComMultas se multas_por_pagar(socio) > LIMITE_BLOQUEIO_CENTIMOS.",
+  "acessos_negados": [],
+  "analise_dependencias": {
+    "dependencias_internas": [
+      ".",
+      ".catalogo",
+      ".emprestimos",
+      ".erros",
+      ".modelos",
+      ".persistencia",
+      ".socios"
+    ],
+    "dependencias_externas": [
+      "__future__",
+      "argparse",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib",
+      "re",
+      "sys"
+    ],
+    "servicos_externos": {
+      "analise_dependencias": "disponível (simulado)"
+    }
+  }
+}

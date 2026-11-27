@@ -1,0 +1,67 @@
+{
+  "versao": 1,
+  "projeto": "reset-password",
+  "tarefas": [
+    {
+      "id": "T1",
+      "descricao": "Analisar impacto e definir o contrato da alteração",
+      "responsavel": "AG3",
+      "depende_de": [],
+      "criterio": "componentes, ficheiros e contrato identificados"
+    },
+    {
+      "id": "T2",
+      "descricao": "Escrever testes de aceitação a partir dos requisitos e do contrato",
+      "responsavel": "AG5",
+      "depende_de": [
+        "T1"
+      ],
+      "criterio": "cada requisito testável tem pelo menos um teste; testes falham sem a alteração"
+    },
+    {
+      "id": "T3",
+      "descricao": "Produzir proposta em área isolada (auth/)",
+      "responsavel": "AG4",
+      "depende_de": [
+        "T1"
+      ],
+      "criterio": "proposta referencia requisitos aceites"
+    },
+    {
+      "id": "T4",
+      "descricao": "Executar regressão + aceitação em sandbox",
+      "responsavel": "AG5",
+      "depende_de": [
+        "T2",
+        "T3"
+      ],
+      "criterio": "0 falhas e 0 erros"
+    },
+    {
+      "id": "T5",
+      "descricao": "Classificar risco da proposta",
+      "responsavel": "AG6",
+      "depende_de": [
+        "T4"
+      ],
+      "criterio": "risco justificado e não bloqueante"
+    },
+    {
+      "id": "T6",
+      "descricao": "Aprovar integração (Nível 2)",
+      "responsavel": "Revisor Humano",
+      "depende_de": [
+        "T5"
+      ],
+      "criterio": "decisão registada"
+    }
+  ],
+  "notas": "T2 e T3 são independentes (podem correr em paralelo); o protótipo executa-as em sequência.",
+  "riscos": [
+    "Alteração ao projeto 'Reset Password' (auth/).",
+    "Fonte com confiança reduzida: repo:docs/legacy-notes.md"
+  ],
+  "pressupostos": [
+    "Aplicam-se só a operações futuras."
+  ]
+}

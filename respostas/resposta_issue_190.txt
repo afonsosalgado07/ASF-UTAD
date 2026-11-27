@@ -1,0 +1,3 @@
+O link de reposição deve expirar ao fim de 15 minutos.
+A resposta pública não deve revelar se o e-mail existe.
+Todas as tentativas de reposição devem ficar registadas.

@@ -1,0 +1,22 @@
+[
+  {
+    "para": "ana",
+    "mensagem": "O pedido precisa de clarificação do autor"
+  },
+  {
+    "para": "revisor",
+    "mensagem": "Validar requisitos derivados pelo AG2"
+  },
+  {
+    "para": "gestor",
+    "mensagem": "Intervenção necessária em 'Em análise de impacto'"
+  },
+  {
+    "para": "gestor",
+    "mensagem": "Intervenção necessária em 'Em análise de impacto'"
+  },
+  {
+    "para": "gestor",
+    "mensagem": "Intervenção necessária em 'Em análise de impacto'"
+  }
+]

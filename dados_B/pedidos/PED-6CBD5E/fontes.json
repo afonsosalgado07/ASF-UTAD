@@ -1,0 +1,8 @@
+{
+  "repo:docs/legacy-notes.md": {
+    "confianca": "T0",
+    "anterior": "T1",
+    "motivo": "instruções dirigidas a sistemas automáticos para alterar o objetivo",
+    "por": "AG6"
+  }
+}

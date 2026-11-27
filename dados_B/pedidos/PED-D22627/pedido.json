@@ -1,0 +1,93 @@
+{
+  "id": "PED-D22627",
+  "titulo": "ISSUE #14 — Melhorar os empréstimos",
+  "descricao": "Os empréstimos deviam funcionar melhor.",
+  "criterios": [],
+  "autor": "ana",
+  "fonte_id": "issue:14",
+  "projeto_id": "biblioteca",
+  "prioridade": "Could",
+  "estado": "Interrompido",
+  "iteracao": 0,
+  "iteracoes_ciclo": 0,
+  "retomar_em": "Em análise de impacto",
+  "cenario": {
+    "llm_manipulado": false,
+    "falha_servico": false
+  },
+  "historico": [
+    [
+      "2026-11-27T20:40:02",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-27T20:40:02",
+      "Em análise de requisitos",
+      "Aguarda clarificação",
+      "1 ambiguidade(s) bloqueante(s)"
+    ],
+    [
+      "2026-11-27T20:40:20",
+      "Aguarda clarificação",
+      "Em análise de requisitos",
+      "autor respondeu"
+    ],
+    [
+      "2026-11-27T20:40:20",
+      "Em análise de requisitos",
+      "Aguarda validação de requisitos",
+      "5 requisito(s) aceite(s), 0 excluído(s)"
+    ],
+    [
+      "2026-11-27T20:41:07",
+      "Aguarda validação de requisitos",
+      "Em planeamento",
+      "requisitos validados"
+    ],
+    [
+      "2026-11-27T20:41:07",
+      "Em planeamento",
+      "Em análise de impacto",
+      "plano criado"
+    ],
+    [
+      "2026-11-27T20:41:07",
+      "Em análise de impacto",
+      "Aguarda intervenção humana",
+      "falha após tentativas limitadas: AG5/testes: a resposta não contém JSON"
+    ],
+    [
+      "2026-11-27T20:43:34",
+      "Aguarda intervenção humana",
+      "Em análise de impacto",
+      "marta mandou retomar"
+    ],
+    [
+      "2026-11-27T20:43:35",
+      "Em análise de impacto",
+      "Aguarda intervenção humana",
+      "falha após tentativas limitadas: AG5/testes: a resposta não contém JSON"
+    ],
+    [
+      "2026-11-27T20:43:41",
+      "Aguarda intervenção humana",
+      "Em análise de impacto",
+      "marta mandou retomar"
+    ],
+    [
+      "2026-11-27T20:43:41",
+      "Em análise de impacto",
+      "Aguarda intervenção humana",
+      "falha após tentativas limitadas: AG5/testes: a resposta não contém JSON"
+    ],
+    [
+      "2026-11-27T20:44:26",
+      "Aguarda intervenção humana",
+      "Interrompido",
+      "marta interrompeu"
+    ]
+  ],
+  "criado_em": "2026-11-27T20:40:02"
+}

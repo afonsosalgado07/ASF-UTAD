@@ -1,0 +1,197 @@
+{
+  "versao": 0,
+  "passados": 13,
+  "falhados": 0,
+  "erros": 4,
+  "ignorados": 0,
+  "duracao_s": 4.54,
+  "simulado": false,
+  "regressao": {
+    "passou": 13,
+    "falhou": 0,
+    "erro": 0,
+    "ignorado": 0
+  },
+  "aceitacao": {
+    "passou": 0,
+    "falhou": 0,
+    "erro": 4,
+    "ignorado": 0
+  },
+  "por_requisito": {
+    "R1": {
+      "testes": [
+        "test_r1_reposicao_dentro_do_prazo"
+      ],
+      "estado": "falhou"
+    },
+    "R2": {
+      "testes": [
+        "test_r2_link_expira"
+      ],
+      "estado": "falhou"
+    },
+    "R3": {
+      "testes": [
+        "test_r3_resposta_nao_revela_registo"
+      ],
+      "estado": "falhou"
+    },
+    "R4": {
+      "testes": [
+        "test_r4_tentativas_registadas"
+      ],
+      "estado": "falhou"
+    },
+    "R5": {
+      "testes": [],
+      "estado": "sem teste"
+    }
+  },
+  "requisitos_sem_teste": [
+    "R5: O fluxo deve funcionar em desktop e mobile."
+  ],
+  "nao_testaveis": [
+    "R5: sem teste automático (ex.: verificação manual em desktop e mobile)"
+  ],
+  "casos": [
+    {
+      "nome": "test_r1_reposicao_dentro_do_prazo",
+      "ficheiro": "tests.test_aceitacao_reset",
+      "grupo": "aceitacao",
+      "resultado": "erro",
+      "requisito": "R1",
+      "detalhe": "failed on setup with \"ModuleNotFoundError: No module named 'auth.password_reset'\""
+    },
+    {
+      "nome": "test_r2_link_expira",
+      "ficheiro": "tests.test_aceitacao_reset",
+      "grupo": "aceitacao",
+      "resultado": "erro",
+      "requisito": "R2",
+      "detalhe": "failed on setup with \"ModuleNotFoundError: No module named 'auth.password_reset'\""
+    },
+    {
+      "nome": "test_r3_resposta_nao_revela_registo",
+      "ficheiro": "tests.test_aceitacao_reset",
+      "grupo": "aceitacao",
+      "resultado": "erro",
+      "requisito": "R3",
+      "detalhe": "failed on setup with \"ModuleNotFoundError: No module named 'auth.password_reset'\""
+    },
+    {
+      "nome": "test_r4_tentativas_registadas",
+      "ficheiro": "tests.test_aceitacao_reset",
+      "grupo": "aceitacao",
+      "resultado": "erro",
+      "requisito": "R4",
+      "detalhe": "failed on setup with \"ModuleNotFoundError: No module named 'auth.password_reset'\""
+    },
+    {
+      "nome": "test_login_correto_e_registado",
+      "ficheiro": "tests.test_login",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_bloqueio_apos_cinco_falhas_e_desbloqueio",
+      "ficheiro": "tests.test_login",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_conta_desativada_nao_entra",
+      "ficheiro": "tests.test_login",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_password_forte_e_aceite",
+      "ficheiro": "tests.test_politica_passwords",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_password_fraca_indica_todas_as_regras",
+      "ficheiro": "tests.test_politica_passwords",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_reset_legacy_envia_email_para_utilizador_registado",
+      "ficheiro": "tests.test_reset_legacy",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_reset_legacy_erro_para_email_desconhecido",
+      "ficheiro": "tests.test_reset_legacy",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_utilizadores_iniciais",
+      "ficheiro": "tests.test_users",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_registar_conta_nova",
+      "ficheiro": "tests.test_users",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_registo_invalido[ana@exemplo.pt-Nova#2026-j\\xe1 existe]",
+      "ficheiro": "tests.test_users",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_registo_invalido[sem-arroba-Nova#2026-e-mail inv\\xe1lido]",
+      "ficheiro": "tests.test_users",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_registo_invalido[novo@exemplo.pt-curta-password fraca]",
+      "ficheiro": "tests.test_users",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_password_guardada_so_como_hash",
+      "ficheiro": "tests.test_users",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    }
+  ],
+  "saida": "EEEE.............                                                        [100%]\n=================================== ERRORS ====================================\n_____________ ERROR at setup of test_r1_reposicao_dentro_do_prazo _____________\n\n    @pytest.fixture(autouse=True)\n    def pr():\n        importlib.reload(users)\n        importlib.reload(email_service)\n>       import auth.password_reset as modulo\nE       ModuleNotFoundError: No module named 'auth.password_reset'\n\ntests\\test_aceitacao_reset.py:14: ModuleNotFoundError\n____________________ ERROR at setup of test_r2_link_expira ____________________\n\n    @pytest.fixture(autouse=True)\n    def pr():\n        importlib.reload(users)\n        importlib.reload(email_service)\n>       import auth.password_reset as modulo\nE       ModuleNotFoundError: No module named 'auth.password_reset'\n\ntests\\test_aceitacao_reset.py:14: ModuleNotFoundError\n____________ ERROR at setup of test_r3_resposta_nao_revela_registo ____________\n\n    @pytest.fixture(autouse=True)\n    def pr():\n        importlib.reload(users)\n        importlib.reload(email_service)\n>       import auth.password_reset as modulo\nE       ModuleNotFoundError: No module named 'auth.password_reset'\n\ntests\\test_aceitacao_reset.py:14: ModuleNotFoundError\n_______________ ERROR at setup of test_r4_tentativas_registadas _______________\n\n    @pytest.fixture(autouse=True)\n    def pr():\n        importlib.reload(users)\n        importlib.reload(email_service)\n>       import auth.password_reset as modulo\nE       ModuleNotFoundError: No module named 'auth.password_reset'\n\ntests\\test_aceitacao_reset.py:14: ModuleNotFoundError\n=========================== short test summary info ===========================\nERROR tests/test_aceitacao_reset.py::test_r1_reposicao_dentro_do_prazo - Modu...\nERROR tests/test_aceitacao_reset.py::test_r2_link_expira - ModuleNotFoundErro...\nERROR tests/test_aceitacao_reset.py::test_r3_resposta_nao_revela_registo - Mo...\nERROR tests/test_aceitacao_reset.py::test_r4_tentativas_registadas - ModuleNo...\n13 passed, 4 errors in 0.72s\n",
+  "sucesso": false
+}

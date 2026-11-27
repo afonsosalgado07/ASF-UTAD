@@ -1,0 +1,54 @@
+{
+  "componentes_afetados": [
+    "biblioteca/"
+  ],
+  "ficheiros_relevantes": [
+    "biblioteca/__init__.py",
+    "biblioteca/__main__.py",
+    "biblioteca/catalogo.py",
+    "biblioteca/emprestimos.py",
+    "biblioteca/erros.py",
+    "biblioteca/modelos.py",
+    "biblioteca/multas.py",
+    "biblioteca/notificacoes.py",
+    "biblioteca/persistencia.py",
+    "biblioteca/socios.py"
+  ],
+  "dependencias": [
+    "biblioteca.notificacoes (envio de e-mails)",
+    "biblioteca.modelos"
+  ],
+  "riscos": [
+    "Alterar emprestimos.py pode quebrar os testes existentes de empréstimos e devoluções."
+  ],
+  "incertezas": [
+    "Persistência das multas entre execuções (persistencia.py) não é pedida na Issue."
+  ],
+  "contrato": "Alterações dentro de biblioteca/ conforme os requisitos.",
+  "acessos_negados": [],
+  "analise_dependencias": {
+    "dependencias_internas": [
+      ".",
+      ".catalogo",
+      ".emprestimos",
+      ".erros",
+      ".modelos",
+      ".multas",
+      ".persistencia",
+      ".socios"
+    ],
+    "dependencias_externas": [
+      "__future__",
+      "argparse",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib",
+      "re",
+      "sys"
+    ],
+    "servicos_externos": {
+      "analise_dependencias": "disponível (simulado)"
+    }
+  }
+}

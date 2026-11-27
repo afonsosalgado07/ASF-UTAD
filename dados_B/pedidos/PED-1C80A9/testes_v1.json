@@ -1,0 +1,258 @@
+{
+  "versao": 1,
+  "passados": 24,
+  "falhados": 0,
+  "erros": 0,
+  "ignorados": 0,
+  "duracao_s": 2.78,
+  "simulado": false,
+  "regressao": {
+    "passou": 17,
+    "falhou": 0,
+    "erro": 0,
+    "ignorado": 0
+  },
+  "aceitacao": {
+    "passou": 7,
+    "falhou": 0,
+    "erro": 0,
+    "ignorado": 0
+  },
+  "por_requisito": {
+    "R1": {
+      "testes": [
+        "test_r1_devolucao_atrasada_gera_multa"
+      ],
+      "estado": "passou"
+    },
+    "R2": {
+      "testes": [
+        "test_r2_cada_dia_de_atraso_custa_50_centimos"
+      ],
+      "estado": "passou"
+    },
+    "R3": {
+      "testes": [
+        "test_r3_multa_tem_teto_de_10_euros"
+      ],
+      "estado": "passou"
+    },
+    "R4": {
+      "testes": [
+        "test_r4_devolucao_no_prazo_sem_multa"
+      ],
+      "estado": "passou"
+    },
+    "R5": {
+      "testes": [
+        "test_r5_socio_com_mais_de_5_euros_nao_requisita",
+        "test_r5_socio_com_5_euros_ainda_requisita"
+      ],
+      "estado": "passou"
+    },
+    "R6": {
+      "testes": [
+        "test_r6_socio_recebe_email_com_valor"
+      ],
+      "estado": "passou"
+    }
+  },
+  "requisitos_sem_teste": [],
+  "nao_testaveis": [],
+  "casos": [
+    {
+      "nome": "test_r1_devolucao_atrasada_gera_multa",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "passou",
+      "requisito": "R1",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_r2_cada_dia_de_atraso_custa_50_centimos",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "passou",
+      "requisito": "R2",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_r3_multa_tem_teto_de_10_euros",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "passou",
+      "requisito": "R3",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_r4_devolucao_no_prazo_sem_multa",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "passou",
+      "requisito": "R4",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_r5_socio_com_mais_de_5_euros_nao_requisita",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "passou",
+      "requisito": "R5",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_r5_socio_com_5_euros_ainda_requisita",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "passou",
+      "requisito": "R5",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_r6_socio_recebe_email_com_valor",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "passou",
+      "requisito": "R6",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_procurar_por_titulo_ou_autor",
+      "ficheiro": "tests.test_catalogo",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_adicionar_isbn_repetido_soma_exemplares",
+      "ficheiro": "tests.test_catalogo",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_livro_sem_exemplares_e_recusado",
+      "ficheiro": "tests.test_catalogo",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_obter_livro_inexistente",
+      "ficheiro": "tests.test_catalogo",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_emprestimo_tem_prazo_e_notifica",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_sem_exemplares_livres",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_limite_de_emprestimos_por_socio",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_socio_inativo_nao_requisita",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_devolucao_liberta_exemplar_e_nao_repete",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_atrasados",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_guardar_e_carregar",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_inscricao_atribui_numeros_sequenciais",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_email_invalido_e_recusado[]",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_email_invalido_e_recusado[sem-arroba]",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_email_invalido_e_recusado[a@b]",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_email_invalido_e_recusado[a b@c.pt]",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_socio_inexistente",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    }
+  ],
+  "saida": "........................                                                 [100%]\n24 passed in 0.36s\n",
+  "sucesso": true
+}

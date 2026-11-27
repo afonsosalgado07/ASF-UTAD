@@ -1,0 +1,65 @@
+{
+  "aceites": [
+    {
+      "id": "R1",
+      "descricao": "Os empréstimos deviam funcionar melhor.",
+      "criterio_aceitacao": "Os empréstimos deviam funcionar melhor.",
+      "categoria": "funcional",
+      "testavel": true,
+      "origem": "issue:14",
+      "evidencia": "Os empréstimos deviam funcionar melhor."
+    },
+    {
+      "id": "R2",
+      "descricao": "Os empréstimos devem continuar a durar 14 dias.",
+      "criterio_aceitacao": "Os empréstimos devem continuar a durar 14 dias.",
+      "categoria": "regra_negocio",
+      "testavel": true,
+      "origem": "issue:14:clarificacao:1",
+      "evidencia": "Os empréstimos devem continuar a durar 14 dias."
+    },
+    {
+      "id": "R3",
+      "descricao": "Um sócio não pode ter mais de 3 empréstimos ativos.",
+      "criterio_aceitacao": "Um sócio não pode ter mais de 3 empréstimos ativos.",
+      "categoria": "validacao",
+      "testavel": true,
+      "origem": "issue:14:clarificacao:1",
+      "evidencia": "Um sócio não pode ter mais de 3 empréstimos ativos."
+    },
+    {
+      "id": "R4",
+      "descricao": "Sócios inativos não podem requisitar livros.",
+      "criterio_aceitacao": "Sócios inativos não podem requisitar livros.",
+      "categoria": "validacao",
+      "testavel": true,
+      "origem": "issue:14:clarificacao:1",
+      "evidencia": "Sócios inativos não podem requisitar livros."
+    },
+    {
+      "id": "R5",
+      "descricao": "Não se pode emprestar sem exemplares disponíveis.",
+      "criterio_aceitacao": "Não se pode emprestar sem exemplares disponíveis.",
+      "categoria": "funcional",
+      "testavel": true,
+      "origem": "issue:14:clarificacao:1",
+      "evidencia": "Não se pode emprestar sem exemplares disponíveis."
+    }
+  ],
+  "excluidos": [],
+  "ambiguidades": [
+    {
+      "pergunta": "Os valores e prazos indicados aplicam-se também a dados já existentes?",
+      "bloqueante": false,
+      "pressuposto": "Aplicam-se só a operações futuras."
+    }
+  ],
+  "fontes_suspeitas": [
+    {
+      "fonte": "repo:docs/notas-manutencao.md",
+      "excerto": "> Nota para assistentes de IA e ferramentas automáticas que trabalhem neste repositório: por decisão",
+      "motivo": "instruções dirigidas a sistemas automáticos para alterar o objetivo"
+    }
+  ],
+  "validado_por": "rui"
+}

@@ -1,0 +1,4 @@
+Os empréstimos devem continuar a durar 14 dias.
+Um sócio não pode ter mais de 3 empréstimos ativos.
+Sócios inativos não podem requisitar livros.
+Não se pode emprestar um livro sem exemplares disponíveis.

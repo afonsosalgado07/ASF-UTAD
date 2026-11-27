@@ -1,0 +1,81 @@
+{
+  "id": "PED-1C80A9",
+  "titulo": "ISSUE #12 — Multas por atraso na devolução",
+  "descricao": "Como bibliotecário, quero que o sistema calcule uma multa quando um livro é devolvido depois do prazo, para incentivar os sócios a devolverem os livros a tempo.",
+  "criterios": [
+    "Cada dia de atraso custa 0,50 €.",
+    "A multa de um empréstimo não pode ultrapassar 10 €.",
+    "Uma devolução dentro do prazo não gera multa.",
+    "Um sócio com multas por pagar acima de 5 € não pode requisitar livros.",
+    "O sócio recebe um e-mail com o valor da multa."
+  ],
+  "autor": "marta",
+  "fonte_id": "issue:12",
+  "projeto_id": "biblioteca",
+  "prioridade": "Must",
+  "estado": "Concluído (integrado)",
+  "iteracao": 1,
+  "iteracoes_ciclo": 1,
+  "retomar_em": "",
+  "cenario": {
+    "llm_manipulado": false,
+    "falha_servico": false
+  },
+  "historico": [
+    [
+      "2026-11-27T19:50:45",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-27T19:50:45",
+      "Em análise de requisitos",
+      "Aguarda validação de requisitos",
+      "6 requisito(s) aceite(s), 0 excluído(s)"
+    ],
+    [
+      "2026-11-27T19:51:26",
+      "Aguarda validação de requisitos",
+      "Em planeamento",
+      "requisitos validados"
+    ],
+    [
+      "2026-11-27T19:51:26",
+      "Em planeamento",
+      "Em análise de impacto",
+      "plano criado"
+    ],
+    [
+      "2026-11-27T19:51:30",
+      "Em análise de impacto",
+      "Em desenvolvimento",
+      "9 ficheiro(s) relevantes; testes de aceitação para 6 requisito(s)"
+    ],
+    [
+      "2026-11-27T19:51:30",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v1 criada"
+    ],
+    [
+      "2026-11-27T19:51:33",
+      "Em testes",
+      "Em revisão de segurança",
+      "24 teste(s) passaram"
+    ],
+    [
+      "2026-11-27T19:51:33",
+      "Em revisão de segurança",
+      "Aguarda aprovação",
+      "risco médio"
+    ],
+    [
+      "2026-11-27T19:51:57",
+      "Aguarda aprovação",
+      "Concluído (integrado)",
+      "integração aprovada"
+    ]
+  ],
+  "criado_em": "2026-11-27T19:50:44"
+}

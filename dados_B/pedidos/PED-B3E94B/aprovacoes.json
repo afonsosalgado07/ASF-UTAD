@@ -1,0 +1,47 @@
+[
+  {
+    "id": "APR-BED826",
+    "pedido_id": "PED-B3E94B",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "5 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T20:07:04",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T20:08:19",
+    "comentario": ""
+  },
+  {
+    "id": "APR-31DFBF",
+    "pedido_id": "PED-B3E94B",
+    "tipo": "INTEGRAR_PROPOSTA",
+    "nivel": 2,
+    "resumo": "Integrar proposta v1 no repositório principal",
+    "detalhe": "Risco médio: Altera 1 ficheiro(s) existente(s): auth/password_reset.py. Regressão: 13 teste(s) existentes continuam a passar. 4 teste(s) de aceitação já passavam ANTES da alteração — podem não verificar nada de novo (rever os testes). 1 requisito(s) sem teste automático — verificação manual necessária. Fontes com confiança reduzida durante a análise: repo:docs/legacy-notes.md",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T20:08:25",
+    "decisao": "pedir_correcoes",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T20:09:48",
+    "comentario": "Reduzir a validade do link para 15 minutos e não guardar o e-mail em claro no registo de tentativas."
+  },
+  {
+    "id": "APR-39C19C",
+    "pedido_id": "PED-B3E94B",
+    "tipo": "INTEGRAR_PROPOSTA",
+    "nivel": 2,
+    "resumo": "Integrar proposta v2 no repositório principal",
+    "detalhe": "Risco médio: Altera 1 ficheiro(s) existente(s): auth/password_reset.py. Regressão: 13 teste(s) existentes continuam a passar. 4 teste(s) de aceitação já passavam ANTES da alteração — podem não verificar nada de novo (rever os testes). 1 requisito(s) sem teste automático — verificação manual necessária. Fontes com confiança reduzida durante a análise: repo:docs/legacy-notes.md",
+    "solicitado_por": "AG1",
+    "estado": "pendente",
+    "criado_em": "2026-11-27T20:09:52",
+    "decisao": "",
+    "decidido_por": "",
+    "decidido_em": "",
+    "comentario": ""
+  }
+]

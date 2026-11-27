@@ -1,0 +1,39 @@
+{
+  "id": "PED-6CBD5E",
+  "titulo": "ISSUE #190 — Melhorar a recuperação de conta",
+  "descricao": "A recuperação de conta devia ser melhor.",
+  "criterios": [],
+  "autor": "marta",
+  "fonte_id": "issue:190",
+  "projeto_id": "reset-password",
+  "prioridade": "Should",
+  "estado": "Interrompido",
+  "iteracao": 0,
+  "iteracoes_ciclo": 0,
+  "retomar_em": "",
+  "cenario": {
+    "llm_manipulado": false,
+    "falha_servico": false
+  },
+  "historico": [
+    [
+      "2026-11-27T20:45:28",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-27T20:45:28",
+      "Em análise de requisitos",
+      "Aguarda clarificação",
+      "1 ambiguidade(s) bloqueante(s)"
+    ],
+    [
+      "2026-11-27T20:46:32",
+      "Aguarda clarificação",
+      "Interrompido",
+      "autor cancelou"
+    ]
+  ],
+  "criado_em": "2026-11-27T20:45:28"
+}

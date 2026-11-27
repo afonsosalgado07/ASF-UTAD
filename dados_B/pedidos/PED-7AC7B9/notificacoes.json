@@ -1,0 +1,14 @@
+[
+  {
+    "para": "ana",
+    "mensagem": "O pedido precisa de clarificação do autor"
+  },
+  {
+    "para": "revisor",
+    "mensagem": "Validar requisitos derivados pelo AG2"
+  },
+  {
+    "para": "revisor",
+    "mensagem": "Integrar proposta v1 no repositório principal"
+  }
+]

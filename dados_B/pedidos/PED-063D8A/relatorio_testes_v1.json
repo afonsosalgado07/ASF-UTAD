@@ -1,0 +1,3 @@
+{
+  "texto": "Relatório de testes — proposta v1\nExecutados de facto em sandbox (não simulados): True\nTotal: 17 passados, 0 falhados, 0 erros (4.46 s)\nRegressão (testes existentes do projeto): 13 passados, 0 com falha\nAceitação (escritos pelo AG5 a partir dos requisitos): 4 passados, 0 com falha\n  R1: passou (test_r1_reposicao_dentro_do_prazo)\n  R2: passou (test_r2_link_expira)\n  R3: passou (test_r3_resposta_nao_revela_registo)\n  R4: passou (test_r4_tentativas_registadas)\n  R5: sem teste\nRequisitos SEM teste automático (verificação manual necessária): R5: O fluxo deve funcionar em desktop e mobile."
+}

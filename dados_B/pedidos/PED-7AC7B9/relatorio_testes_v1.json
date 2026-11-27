@@ -1,0 +1,3 @@
+{
+  "texto": "Relatório de testes — proposta v1\nExecutados de facto em sandbox (não simulados): True\nTotal: 15 passados, 0 falhados, 0 erros (2.74 s)\nRegressão (testes existentes do projeto): 13 passados, 0 com falha\nAceitação (escritos pelo AG5 a partir dos requisitos): 2 passados, 0 com falha\n  R1: sem teste\n  R2: passou (test_r2_link_expira)\n  R3: sem teste\n  R4: passou (test_r4_tentativas_registadas)\nRequisitos SEM teste automático (verificação manual necessária): R1: A recuperação de conta devia ser melhor.; R3: A resposta pública não deve revelar se o e-mail existe."
+}

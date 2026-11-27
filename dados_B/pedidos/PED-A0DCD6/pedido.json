@@ -1,0 +1,35 @@
+{
+  "id": "PED-A0DCD6",
+  "titulo": "ISSUE #184 — Password Reset",
+  "descricao": "Como utilizador registado, quero recuperar a palavra-passe através do meu endereço de e-mail para voltar a aceder à conta.",
+  "criterios": [
+    "O link deve expirar.",
+    "Não deve ser possível descobrir se um e-mail está registado através da resposta pública.",
+    "Todas as tentativas devem ser registadas.",
+    "O fluxo deve funcionar em desktop e mobile."
+  ],
+  "autor": "ana",
+  "fonte_id": "issue:184",
+  "projeto_id": "reset-password",
+  "prioridade": "Must",
+  "estado": "Aguarda validação de requisitos",
+  "iteracao": 0,
+  "iteracoes_ciclo": 0,
+  "retomar_em": "",
+  "cenario": {},
+  "historico": [
+    [
+      "2026-11-27T21:02:35",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-27T21:02:35",
+      "Em análise de requisitos",
+      "Aguarda validação de requisitos",
+      "5 requisito(s) aceite(s), 0 excluído(s)"
+    ]
+  ],
+  "criado_em": "2026-11-27T21:02:35"
+}

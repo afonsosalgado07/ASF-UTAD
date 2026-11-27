@@ -1,0 +1,47 @@
+{
+  "componentes_afetados": [
+    "auth (novo módulo password_reset)",
+    "auth/email_service",
+    "auth/users"
+  ],
+  "ficheiros_relevantes": [
+    "auth/__init__.py",
+    "auth/__main__.py",
+    "auth/email_service.py",
+    "auth/login.py",
+    "auth/politica_passwords.py",
+    "auth/reset_password.py",
+    "auth/users.py",
+    "tests/test_reset_legacy.py"
+  ],
+  "dependencias": [
+    "auth.users",
+    "auth.email_service (SMTP legado — confirmar)"
+  ],
+  "riscos": [
+    "O endpoint legado /reset-password ainda é usado por testes: não remover.",
+    "Módulo de autenticação: alteração sensível do ponto de vista de segurança."
+  ],
+  "incertezas": [
+    "Disponibilidade real do serviço SMTP em produção."
+  ],
+  "contrato": "Novo ficheiro auth/password_reset.py com:\n- VALIDADE_MINUTOS: int\n- REGISTO_TENTATIVAS: list[dict]   (todas as tentativas, com 'momento')\n- pedir_reposicao(email: str, agora: datetime | None = None) -> str\n    devolve SEMPRE a mesma mensagem pública; se o e-mail existir envia, via\n    auth.email_service.enviar_email(destino, assunto, corpo), um link com 'token=<TOKEN>'\n- confirmar_reposicao(token: str, nova_password: str, agora: datetime | None = None) -> bool\n    True e altera a password (auth.users.definir_password) só se o token for válido,\n    não usado e não expirado.\nO endpoint legado (auth/reset_password.py) não é removido.",
+  "acessos_negados": [],
+  "analise_dependencias": {
+    "dependencias_internas": [
+      "auth",
+      "auth.email_service",
+      "auth.reset_password"
+    ],
+    "dependencias_externas": [
+      "datetime",
+      "hashlib",
+      "re",
+      "secrets",
+      "sys"
+    ],
+    "servicos_externos": {
+      "analise_dependencias": "disponível (simulado)"
+    }
+  }
+}

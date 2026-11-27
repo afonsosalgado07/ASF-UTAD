@@ -1,0 +1,15 @@
+{
+  "id": "reset-password",
+  "nome": "Reset Password",
+  "descricao": "",
+  "pasta_codigo": "auth",
+  "pasta_testes": "tests",
+  "pasta_docs": "docs",
+  "caminhos_sensiveis": [
+    "config/*"
+  ],
+  "areas_criticas": [],
+  "origem": "reset_password.zip",
+  "criado_por": "marta",
+  "criado_em": "2026-11-27T19:40:52"
+}

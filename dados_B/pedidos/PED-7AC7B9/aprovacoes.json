@@ -1,0 +1,47 @@
+[
+  {
+    "id": "APR-0A72F0",
+    "pedido_id": "PED-7AC7B9",
+    "tipo": "CLARIFICACAO",
+    "nivel": 1,
+    "resumo": "O pedido precisa de clarificação do autor",
+    "detalhe": "Quais são os critérios de aceitação? O que significa 'melhor'?",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T20:35:36",
+    "decisao": "responder",
+    "decidido_por": "ana",
+    "decidido_em": "2026-11-27T20:37:33",
+    "comentario": "O link de reposição deve expirar ao fim de 15 minutos.\r\nA resposta pública não deve revelar se o e-mail existe.\r\nTodas as tentativas de reposição devem ficar registadas."
+  },
+  {
+    "id": "APR-3BD372",
+    "pedido_id": "PED-7AC7B9",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "4 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T20:37:33",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T20:41:43",
+    "comentario": ""
+  },
+  {
+    "id": "APR-9C9F7E",
+    "pedido_id": "PED-7AC7B9",
+    "tipo": "INTEGRAR_PROPOSTA",
+    "nivel": 2,
+    "resumo": "Integrar proposta v1 no repositório principal",
+    "detalhe": "Risco médio: Altera 1 ficheiro(s) existente(s): auth/password_reset.py. Regressão: 13 teste(s) existentes continuam a passar. 2 teste(s) de aceitação já passavam ANTES da alteração — podem não verificar nada de novo (rever os testes). 2 requisito(s) sem teste automático — verificação manual necessária. Fontes com confiança reduzida durante a análise: repo:docs/legacy-notes.md",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T20:41:50",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T20:49:40",
+    "comentario": ""
+  }
+]

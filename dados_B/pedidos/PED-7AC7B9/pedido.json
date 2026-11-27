@@ -1,0 +1,87 @@
+{
+  "id": "PED-7AC7B9",
+  "titulo": "ISSUE #190 — Melhorar a recuperação de conta",
+  "descricao": "A recuperação de conta devia ser melhor.",
+  "criterios": [],
+  "autor": "ana",
+  "fonte_id": "issue:190",
+  "projeto_id": "reset-password",
+  "prioridade": "Should",
+  "estado": "Concluído (integrado)",
+  "iteracao": 1,
+  "iteracoes_ciclo": 1,
+  "retomar_em": "",
+  "cenario": {
+    "llm_manipulado": false,
+    "falha_servico": false
+  },
+  "historico": [
+    [
+      "2026-11-27T20:35:36",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-27T20:35:36",
+      "Em análise de requisitos",
+      "Aguarda clarificação",
+      "1 ambiguidade(s) bloqueante(s)"
+    ],
+    [
+      "2026-11-27T20:37:33",
+      "Aguarda clarificação",
+      "Em análise de requisitos",
+      "autor respondeu"
+    ],
+    [
+      "2026-11-27T20:37:33",
+      "Em análise de requisitos",
+      "Aguarda validação de requisitos",
+      "4 requisito(s) aceite(s), 0 excluído(s)"
+    ],
+    [
+      "2026-11-27T20:41:43",
+      "Aguarda validação de requisitos",
+      "Em planeamento",
+      "requisitos validados"
+    ],
+    [
+      "2026-11-27T20:41:43",
+      "Em planeamento",
+      "Em análise de impacto",
+      "plano criado"
+    ],
+    [
+      "2026-11-27T20:41:46",
+      "Em análise de impacto",
+      "Em desenvolvimento",
+      "9 ficheiro(s) relevantes; testes de aceitação para 2 requisito(s)"
+    ],
+    [
+      "2026-11-27T20:41:47",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v1 criada"
+    ],
+    [
+      "2026-11-27T20:41:50",
+      "Em testes",
+      "Em revisão de segurança",
+      "15 teste(s) passaram"
+    ],
+    [
+      "2026-11-27T20:41:50",
+      "Em revisão de segurança",
+      "Aguarda aprovação",
+      "risco médio"
+    ],
+    [
+      "2026-11-27T20:49:40",
+      "Aguarda aprovação",
+      "Concluído (integrado)",
+      "integração aprovada"
+    ]
+  ],
+  "criado_em": "2026-11-27T20:35:36"
+}

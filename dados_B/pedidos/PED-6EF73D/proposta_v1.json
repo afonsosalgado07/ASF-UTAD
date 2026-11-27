@@ -1,0 +1,45 @@
+{
+  "versao": 1,
+  "estado": "Integrada",
+  "ficheiros": {
+    "auth/password_reset.py": "\"\"\"Reposição de palavra-passe por e-mail (Issue #184).\"\"\"\nimport hashlib\nimport secrets\nfrom datetime import datetime, timedelta\n\nfrom auth import users\nfrom auth.email_service import enviar_email\n\nVALIDADE_MINUTOS = 30\nMENSAGEM_PUBLICA = \"Se o e-mail estiver registado, receberá instruções para repor a palavra-passe.\"\n\nREGISTO_TENTATIVAS: list[dict] = []\n_TOKENS: dict[str, dict] = {}   # hash do token -> {email, expira, usado}\n\n\ndef _hash(token: str) -> str:\n    return hashlib.sha256(token.encode()).hexdigest()\n\n\ndef pedir_reposicao(email: str, agora: datetime | None = None) -> str:\n    agora = agora or datetime.now()\n    registado = users.existe(email)\n    REGISTO_TENTATIVAS.append({\"momento\": agora.isoformat(), \"tipo\": \"pedido\",\n                               \"email_hash\": _hash(email.strip().lower()), \"registado\": registado})\n    if registado:\n        token = secrets.token_urlsafe(24)\n        _TOKENS[_hash(token)] = {\"email\": email.strip().lower(),\n                                 \"expira\": agora + timedelta(minutes=VALIDADE_MINUTOS), \"usado\": False}\n        enviar_email(email, \"Reposição de palavra-passe\",\n                     f\"Use este link (válido {VALIDADE_MINUTOS} min): https://app.exemplo.pt/reset?token={token}\")\n    return MENSAGEM_PUBLICA\n\n\ndef confirmar_reposicao(token: str, nova_password: str, agora: datetime | None = None) -> bool:\n    agora = agora or datetime.now()\n    dados = _TOKENS.get(_hash(token))\n    valido = bool(dados) and not dados[\"usado\"] and agora <= dados[\"expira\"]\n    REGISTO_TENTATIVAS.append({\"momento\": agora.isoformat(), \"tipo\": \"confirmacao\", \"sucesso\": valido})\n    if not valido:\n        return False\n    users.definir_password(dados[\"email\"], nova_password)\n    dados[\"usado\"] = True\n    return True\n"
+  },
+  "novos": [
+    "auth/password_reset.py"
+  ],
+  "diff": "--- a/auth/password_reset.py\n+++ b/auth/password_reset.py\n@@ -0,0 +1,43 @@\n+\"\"\"Reposição de palavra-passe por e-mail (Issue #184).\"\"\"\n+import hashlib\n+import secrets\n+from datetime import datetime, timedelta\n+\n+from auth import users\n+from auth.email_service import enviar_email\n+\n+VALIDADE_MINUTOS = 30\n+MENSAGEM_PUBLICA = \"Se o e-mail estiver registado, receberá instruções para repor a palavra-passe.\"\n+\n+REGISTO_TENTATIVAS: list[dict] = []\n+_TOKENS: dict[str, dict] = {}   # hash do token -> {email, expira, usado}\n+\n+\n+def _hash(token: str) -> str:\n+    return hashlib.sha256(token.encode()).hexdigest()\n+\n+\n+def pedir_reposicao(email: str, agora: datetime | None = None) -> str:\n+    agora = agora or datetime.now()\n+    registado = users.existe(email)\n+    REGISTO_TENTATIVAS.append({\"momento\": agora.isoformat(), \"tipo\": \"pedido\",\n+                               \"email_hash\": _hash(email.strip().lower()), \"registado\": registado})\n+    if registado:\n+        token = secrets.token_urlsafe(24)\n+        _TOKENS[_hash(token)] = {\"email\": email.strip().lower(),\n+                                 \"expira\": agora + timedelta(minutes=VALIDADE_MINUTOS), \"usado\": False}\n+        enviar_email(email, \"Reposição de palavra-passe\",\n+                     f\"Use este link (válido {VALIDADE_MINUTOS} min): https://app.exemplo.pt/reset?token={token}\")\n+    return MENSAGEM_PUBLICA\n+\n+\n+def confirmar_reposicao(token: str, nova_password: str, agora: datetime | None = None) -> bool:\n+    agora = agora or datetime.now()\n+    dados = _TOKENS.get(_hash(token))\n+    valido = bool(dados) and not dados[\"usado\"] and agora <= dados[\"expira\"]\n+    REGISTO_TENTATIVAS.append({\"momento\": agora.isoformat(), \"tipo\": \"confirmacao\", \"sucesso\": valido})\n+    if not valido:\n+        return False\n+    users.definir_password(dados[\"email\"], nova_password)\n+    dados[\"usado\"] = True\n+    return True",
+  "justificacao": "Novo fluxo de reposição com token de uso único e validade limitada, resposta pública idêntica para e-mails registados e não registados e registo de todas as tentativas. O endpoint legado não é removido.",
+  "requisitos_ref": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5"
+  ],
+  "historico": [
+    [
+      "2026-11-27T19:47:17",
+      "Rascunho",
+      "Em testes",
+      ""
+    ],
+    [
+      "2026-11-27T19:47:20",
+      "Em testes",
+      "Em revisão de segurança",
+      ""
+    ],
+    [
+      "2026-11-27T19:47:20",
+      "Em revisão de segurança",
+      "Aguarda aprovação",
+      ""
+    ],
+    [
+      "2026-11-27T19:48:23",
+      "Aguarda aprovação",
+      "Integrada",
+      "aprovada por rui"
+    ]
+  ]
+}

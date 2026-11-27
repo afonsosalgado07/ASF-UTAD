@@ -1,0 +1,17 @@
+[
+  {
+    "id": "APR-A89A80",
+    "pedido_id": "PED-A0DCD6",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "5 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "pendente",
+    "criado_em": "2026-11-27T21:02:35",
+    "decisao": "",
+    "decidido_por": "",
+    "decidido_em": "",
+    "comentario": ""
+  }
+]

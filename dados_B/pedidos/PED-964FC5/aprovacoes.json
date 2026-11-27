@@ -1,0 +1,17 @@
+[
+  {
+    "id": "APR-2F062F",
+    "pedido_id": "PED-964FC5",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "5 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "pendente",
+    "criado_em": "2026-11-27T22:07:37",
+    "decisao": "",
+    "decidido_por": "",
+    "decidido_em": "",
+    "comentario": ""
+  }
+]

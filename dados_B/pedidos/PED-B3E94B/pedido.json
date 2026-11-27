@@ -1,0 +1,98 @@
+{
+  "id": "PED-B3E94B",
+  "titulo": "ISSUE #184 — Password Reset",
+  "descricao": "Como utilizador registado, quero recuperar a palavra-passe através do meu endereço de e-mail para voltar a aceder à conta.",
+  "criterios": [
+    "O link deve expirar.",
+    "Não deve ser possível descobrir se um e-mail está registado através da resposta pública.",
+    "Todas as tentativas devem ser registadas.",
+    "O fluxo deve funcionar em desktop e mobile."
+  ],
+  "autor": "ana",
+  "fonte_id": "issue:184",
+  "projeto_id": "reset-password",
+  "prioridade": "Must",
+  "estado": "Aguarda aprovação",
+  "iteracao": 2,
+  "iteracoes_ciclo": 1,
+  "retomar_em": "",
+  "cenario": {
+    "llm_manipulado": false,
+    "falha_servico": false
+  },
+  "historico": [
+    [
+      "2026-11-27T20:07:04",
+      "Recebido",
+      "Em análise de requisitos",
+      "pedido registado"
+    ],
+    [
+      "2026-11-27T20:07:04",
+      "Em análise de requisitos",
+      "Aguarda validação de requisitos",
+      "5 requisito(s) aceite(s), 0 excluído(s)"
+    ],
+    [
+      "2026-11-27T20:08:19",
+      "Aguarda validação de requisitos",
+      "Em planeamento",
+      "requisitos validados"
+    ],
+    [
+      "2026-11-27T20:08:19",
+      "Em planeamento",
+      "Em análise de impacto",
+      "plano criado"
+    ],
+    [
+      "2026-11-27T20:08:22",
+      "Em análise de impacto",
+      "Em desenvolvimento",
+      "9 ficheiro(s) relevantes; testes de aceitação para 4 requisito(s)"
+    ],
+    [
+      "2026-11-27T20:08:22",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v1 criada"
+    ],
+    [
+      "2026-11-27T20:08:25",
+      "Em testes",
+      "Em revisão de segurança",
+      "17 teste(s) passaram"
+    ],
+    [
+      "2026-11-27T20:08:25",
+      "Em revisão de segurança",
+      "Aguarda aprovação",
+      "risco médio"
+    ],
+    [
+      "2026-11-27T20:09:48",
+      "Aguarda aprovação",
+      "Em desenvolvimento",
+      "revisor pediu correções"
+    ],
+    [
+      "2026-11-27T20:09:48",
+      "Em desenvolvimento",
+      "Em testes",
+      "proposta v2 criada"
+    ],
+    [
+      "2026-11-27T20:09:52",
+      "Em testes",
+      "Em revisão de segurança",
+      "17 teste(s) passaram"
+    ],
+    [
+      "2026-11-27T20:09:52",
+      "Em revisão de segurança",
+      "Aguarda aprovação",
+      "risco médio"
+    ]
+  ],
+  "criado_em": "2026-11-27T20:07:04"
+}

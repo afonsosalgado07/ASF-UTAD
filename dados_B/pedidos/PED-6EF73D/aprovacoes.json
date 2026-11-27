@@ -1,0 +1,32 @@
+[
+  {
+    "id": "APR-F5B5B5",
+    "pedido_id": "PED-6EF73D",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "5 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T19:45:52",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T19:47:12",
+    "comentario": ""
+  },
+  {
+    "id": "APR-2F75A8",
+    "pedido_id": "PED-6EF73D",
+    "tipo": "INTEGRAR_PROPOSTA",
+    "nivel": 2,
+    "resumo": "Integrar proposta v1 no repositório principal",
+    "detalhe": "Risco baixo: Só acrescenta ficheiros novos. Regressão: 13 teste(s) existentes continuam a passar. 1 requisito(s) sem teste automático — verificação manual necessária. Fontes com confiança reduzida durante a análise: repo:docs/legacy-notes.md",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T19:47:20",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T19:48:23",
+    "comentario": ""
+  }
+]

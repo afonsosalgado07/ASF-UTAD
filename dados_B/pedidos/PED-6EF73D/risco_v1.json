@@ -1,0 +1,11 @@
+{
+  "versao": 1,
+  "nivel": "baixo",
+  "fatores": [
+    "Só acrescenta ficheiros novos.",
+    "Regressão: 13 teste(s) existentes continuam a passar.",
+    "1 requisito(s) sem teste automático — verificação manual necessária.",
+    "Fontes com confiança reduzida durante a análise: repo:docs/legacy-notes.md"
+  ],
+  "recomenda_aprovacao_humana": true
+}

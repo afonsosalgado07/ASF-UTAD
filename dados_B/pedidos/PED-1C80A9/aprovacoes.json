@@ -1,0 +1,32 @@
+[
+  {
+    "id": "APR-2A9620",
+    "pedido_id": "PED-1C80A9",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "6 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T19:50:45",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T19:51:26",
+    "comentario": ""
+  },
+  {
+    "id": "APR-72CE74",
+    "pedido_id": "PED-1C80A9",
+    "tipo": "INTEGRAR_PROPOSTA",
+    "nivel": 2,
+    "resumo": "Integrar proposta v1 no repositório principal",
+    "detalhe": "Risco médio: Altera 2 ficheiro(s) existente(s): biblioteca/erros.py, biblioteca/emprestimos.py. Regressão: 17 teste(s) existentes continuam a passar. 1 teste(s) de aceitação já passavam ANTES da alteração — podem não verificar nada de novo (rever os testes). Fontes com confiança reduzida durante a análise: repo:docs/notas-manutencao.md",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T19:51:33",
+    "decisao": "aprovar",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T19:51:57",
+    "comentario": ""
+  }
+]

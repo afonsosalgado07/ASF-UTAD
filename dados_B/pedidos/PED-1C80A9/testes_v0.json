@@ -1,0 +1,258 @@
+{
+  "versao": 0,
+  "passados": 18,
+  "falhados": 6,
+  "erros": 0,
+  "ignorados": 0,
+  "duracao_s": 3.15,
+  "simulado": false,
+  "regressao": {
+    "passou": 17,
+    "falhou": 0,
+    "erro": 0,
+    "ignorado": 0
+  },
+  "aceitacao": {
+    "passou": 1,
+    "falhou": 6,
+    "erro": 0,
+    "ignorado": 0
+  },
+  "por_requisito": {
+    "R1": {
+      "testes": [
+        "test_r1_devolucao_atrasada_gera_multa"
+      ],
+      "estado": "falhou"
+    },
+    "R2": {
+      "testes": [
+        "test_r2_cada_dia_de_atraso_custa_50_centimos"
+      ],
+      "estado": "falhou"
+    },
+    "R3": {
+      "testes": [
+        "test_r3_multa_tem_teto_de_10_euros"
+      ],
+      "estado": "falhou"
+    },
+    "R4": {
+      "testes": [
+        "test_r4_devolucao_no_prazo_sem_multa"
+      ],
+      "estado": "falhou"
+    },
+    "R5": {
+      "testes": [
+        "test_r5_socio_com_mais_de_5_euros_nao_requisita",
+        "test_r5_socio_com_5_euros_ainda_requisita"
+      ],
+      "estado": "falhou"
+    },
+    "R6": {
+      "testes": [
+        "test_r6_socio_recebe_email_com_valor"
+      ],
+      "estado": "falhou"
+    }
+  },
+  "requisitos_sem_teste": [],
+  "nao_testaveis": [],
+  "casos": [
+    {
+      "nome": "test_r1_devolucao_atrasada_gera_multa",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "falhou",
+      "requisito": "R1",
+      "detalhe": "AttributeError: 'ServicoEmprestimos' object has no attribute 'multas_por_pagar'"
+    },
+    {
+      "nome": "test_r2_cada_dia_de_atraso_custa_50_centimos",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "falhou",
+      "requisito": "R2",
+      "detalhe": "AttributeError: 'ServicoEmprestimos' object has no attribute 'multas_por_pagar'"
+    },
+    {
+      "nome": "test_r3_multa_tem_teto_de_10_euros",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "falhou",
+      "requisito": "R3",
+      "detalhe": "AttributeError: 'ServicoEmprestimos' object has no attribute 'multas_por_pagar'"
+    },
+    {
+      "nome": "test_r4_devolucao_no_prazo_sem_multa",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "falhou",
+      "requisito": "R4",
+      "detalhe": "AttributeError: 'ServicoEmprestimos' object has no attribute 'multas_por_pagar'"
+    },
+    {
+      "nome": "test_r5_socio_com_mais_de_5_euros_nao_requisita",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "falhou",
+      "requisito": "R5",
+      "detalhe": "ImportError: cannot import name 'SocioComMultas' from 'biblioteca.erros' (C:\\Users\\duart\\AppData\\Local\\Temp\\asf_sandbox_pe4y_8m7\\repo\\biblioteca\\erros.py)"
+    },
+    {
+      "nome": "test_r5_socio_com_5_euros_ainda_requisita",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "passou",
+      "requisito": "R5",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_r6_socio_recebe_email_com_valor",
+      "ficheiro": "tests.test_aceitacao_multas",
+      "grupo": "aceitacao",
+      "resultado": "falhou",
+      "requisito": "R6",
+      "detalhe": "AssertionError: assert '1,00 €' in 'Requisitou «Os Maias». Devolva até 2026-03-16.'"
+    },
+    {
+      "nome": "test_procurar_por_titulo_ou_autor",
+      "ficheiro": "tests.test_catalogo",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_adicionar_isbn_repetido_soma_exemplares",
+      "ficheiro": "tests.test_catalogo",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_livro_sem_exemplares_e_recusado",
+      "ficheiro": "tests.test_catalogo",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_obter_livro_inexistente",
+      "ficheiro": "tests.test_catalogo",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_emprestimo_tem_prazo_e_notifica",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_sem_exemplares_livres",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_limite_de_emprestimos_por_socio",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_socio_inativo_nao_requisita",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_devolucao_liberta_exemplar_e_nao_repete",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_atrasados",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_guardar_e_carregar",
+      "ficheiro": "tests.test_emprestimos",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_inscricao_atribui_numeros_sequenciais",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_email_invalido_e_recusado[]",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_email_invalido_e_recusado[sem-arroba]",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_email_invalido_e_recusado[a@b]",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_email_invalido_e_recusado[a b@c.pt]",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    },
+    {
+      "nome": "test_socio_inexistente",
+      "ficheiro": "tests.test_socios",
+      "grupo": "regressao",
+      "resultado": "passou",
+      "requisito": "",
+      "detalhe": ""
+    }
+  ],
+  "saida": "_dia_de_atraso_custa_50_centimos _________________\n\nbib = <biblioteca.Biblioteca object at 0x00000291E1BBC410>\n\n    def test_r2_cada_dia_de_atraso_custa_50_centimos(bib):\n        _devolver_com_atraso(bib, 3)\n>       assert bib.emprestimos.multas_por_pagar(1) == 150\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       AttributeError: 'ServicoEmprestimos' object has no attribute 'multas_por_pagar'\n\ntests\\test_aceitacao_multas.py:22: AttributeError\n_____________________ test_r3_multa_tem_teto_de_10_euros ______________________\n\nbib = <biblioteca.Biblioteca object at 0x00000291E1BBCF50>\n\n    def test_r3_multa_tem_teto_de_10_euros(bib):\n        _devolver_com_atraso(bib, 60)\n>       assert bib.emprestimos.multas_por_pagar(1) == 1000\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       AttributeError: 'ServicoEmprestimos' object has no attribute 'multas_por_pagar'\n\ntests\\test_aceitacao_multas.py:26: AttributeError\n____________________ test_r4_devolucao_no_prazo_sem_multa _____________________\n\nbib = <biblioteca.Biblioteca object at 0x00000291E1C24FC0>\n\n    def test_r4_devolucao_no_prazo_sem_multa(bib):\n        _devolver_com_atraso(bib, 0)\n>       assert bib.emprestimos.multas_por_pagar(1) == 0\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       AttributeError: 'ServicoEmprestimos' object has no attribute 'multas_por_pagar'\n\ntests\\test_aceitacao_multas.py:30: AttributeError\n_______________ test_r5_socio_com_mais_de_5_euros_nao_requisita _______________\n\nbib = <biblioteca.Biblioteca object at 0x00000291E1C25E00>\n\n    def test_r5_socio_com_mais_de_5_euros_nao_requisita(bib):\n>       from biblioteca.erros import SocioComMultas\nE       ImportError: cannot import name 'SocioComMultas' from 'biblioteca.erros' (C:\\Users\\duart\\AppData\\Local\\Temp\\asf_sandbox_pe4y_8m7\\repo\\biblioteca\\erros.py)\n\ntests\\test_aceitacao_multas.py:33: ImportError\n____________________ test_r6_socio_recebe_email_com_valor _____________________\n\nbib = <biblioteca.Biblioteca object at 0x00000291E1CC3790>\n\n    def test_r6_socio_recebe_email_com_valor(bib):\n        notificacoes.limpar()\n        _devolver_com_atraso(bib, 2)\n        ultimo = notificacoes.CAIXA_SAIDA[-1]\n        assert ultimo[\"destino\"] == \"joana@escola.pt\"\n>       assert \"1,00 €\" in ultimo[\"corpo\"]\nE       AssertionError: assert '1,00 €' in 'Requisitou «Os Maias». Devolva até 2026-03-16.'\n\ntests\\test_aceitacao_multas.py:50: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/test_aceitacao_multas.py::test_r1_devolucao_atrasada_gera_multa\nFAILED tests/test_aceitacao_multas.py::test_r2_cada_dia_de_atraso_custa_50_centimos\nFAILED tests/test_aceitacao_multas.py::test_r3_multa_tem_teto_de_10_euros - A...\nFAILED tests/test_aceitacao_multas.py::test_r4_devolucao_no_prazo_sem_multa\nFAILED tests/test_aceitacao_multas.py::test_r5_socio_com_mais_de_5_euros_nao_requisita\nFAILED tests/test_aceitacao_multas.py::test_r6_socio_recebe_email_com_valor\n6 failed, 18 passed in 0.59s\n",
+  "sucesso": false
+}

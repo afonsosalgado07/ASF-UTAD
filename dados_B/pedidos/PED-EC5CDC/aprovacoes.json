@@ -1,0 +1,32 @@
+[
+  {
+    "id": "APR-A21804",
+    "pedido_id": "PED-EC5CDC",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "5 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T19:55:47",
+    "decisao": "pedir_revisao",
+    "decidido_por": "rui",
+    "decidido_em": "2026-11-27T19:56:05",
+    "comentario": "“Falta um requisito explícito para o link ser de uso único.”"
+  },
+  {
+    "id": "APR-0F5660",
+    "pedido_id": "PED-EC5CDC",
+    "tipo": "VALIDAR_REQUISITOS",
+    "nivel": 1,
+    "resumo": "Validar requisitos derivados pelo AG2",
+    "detalhe": "5 aceites, 0 excluídos por proveniência",
+    "solicitado_por": "AG1",
+    "estado": "pendente",
+    "criado_em": "2026-11-27T19:56:05",
+    "decisao": "",
+    "decidido_por": "",
+    "decidido_em": "",
+    "comentario": ""
+  }
+]

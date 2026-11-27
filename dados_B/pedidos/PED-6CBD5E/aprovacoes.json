@@ -1,0 +1,17 @@
+[
+  {
+    "id": "APR-99675E",
+    "pedido_id": "PED-6CBD5E",
+    "tipo": "CLARIFICACAO",
+    "nivel": 1,
+    "resumo": "O pedido precisa de clarificação do autor",
+    "detalhe": "Quais são os critérios de aceitação? O que significa 'melhor'?",
+    "solicitado_por": "AG1",
+    "estado": "decidido",
+    "criado_em": "2026-11-27T20:45:28",
+    "decisao": "cancelar",
+    "decidido_por": "ana",
+    "decidido_em": "2026-11-27T20:46:32",
+    "comentario": ""
+  }
+]

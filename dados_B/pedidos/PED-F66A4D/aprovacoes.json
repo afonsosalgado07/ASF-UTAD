@@ -1,0 +1,17 @@
+[
+  {
+    "id": "APR-A1F411",
+    "pedido_id": "PED-F66A4D",
+    "tipo": "INTERVENCAO",
+    "nivel": 1,
+    "resumo": "Intervenção necessária em 'Em análise de requisitos'",
+    "detalhe": "erro inesperado (FerramentaBloqueada): AG2 não tem permissão para TL4 (matriz de permissões)",
+    "solicitado_por": "AG1",
+    "estado": "pendente",
+    "criado_em": "2026-11-27T21:02:03",
+    "decisao": "",
+    "decidido_por": "",
+    "decidido_em": "",
+    "comentario": ""
+  }
+]

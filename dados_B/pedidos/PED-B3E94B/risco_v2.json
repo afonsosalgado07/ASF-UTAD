@@ -1,0 +1,12 @@
+{
+  "versao": 2,
+  "nivel": "médio",
+  "fatores": [
+    "Altera 1 ficheiro(s) existente(s): auth/password_reset.py.",
+    "Regressão: 13 teste(s) existentes continuam a passar.",
+    "4 teste(s) de aceitação já passavam ANTES da alteração — podem não verificar nada de novo (rever os testes).",
+    "1 requisito(s) sem teste automático — verificação manual necessária.",
+    "Fontes com confiança reduzida durante a análise: repo:docs/legacy-notes.md"
+  ],
+  "recomenda_aprovacao_humana": true
+}

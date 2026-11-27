@@ -1,0 +1,11 @@
+{
+  "versao": 1,
+  "nivel": "médio",
+  "fatores": [
+    "Altera 2 ficheiro(s) existente(s): biblioteca/erros.py, biblioteca/emprestimos.py.",
+    "Regressão: 17 teste(s) existentes continuam a passar.",
+    "1 teste(s) de aceitação já passavam ANTES da alteração — podem não verificar nada de novo (rever os testes).",
+    "Fontes com confiança reduzida durante a análise: repo:docs/notas-manutencao.md"
+  ],
+  "recomenda_aprovacao_humana": true
+}
